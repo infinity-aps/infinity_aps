@@ -28,6 +28,7 @@ end
 
 release :nerves_aps do
   set version: current_version(:nerves_aps)
+  plugin Bootloader.Plugin
   if System.get_env("NERVES_SYSTEM") do
     set dev_mode: false
     set include_src: false
@@ -36,4 +37,3 @@ release :nerves_aps do
     set vm_args: "rel/vm.args"
   end
 end
-

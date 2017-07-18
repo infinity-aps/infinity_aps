@@ -27,16 +27,17 @@ defmodule NervesAps.Mixfile do
   def application, do: application(@target)
 
   def application("host") do
-    [extra_applications: [:logger, :nerves_uart, :timex]]
+    [extra_applications: [:logger, :nerves_uart, :timex, :twilight_informant]]
   end
   def application(_target) do
     [mod: {NervesAps.Application, []},
-     extra_applications: [:logger, :nerves_uart, :timex, :nerves_ntp]]
+     extra_applications: [:logger, :nerves_uart, :timex, :twilight_informant, :nerves_ntp]]
   end
 
   def deps do
     [{:nerves, "~> 0.6", runtime: false},
-     {:pummpcomm, path: "/Users/tmecklem/src/t1d/diy-pancreas/pummpcomm"}] ++
+     {:pummpcomm, path: "/Users/tmecklem/src/t1d/diy-pancreas/pummpcomm"},
+     {:twilight_informant, path: "/Users/tmecklem/src/t1d/diy-pancreas/twilight_informant"}] ++
     deps(@target)
   end
 

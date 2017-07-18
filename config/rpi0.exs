@@ -20,3 +20,5 @@ config :nerves_firmware_ssh,
   authorized_keys: ["""
   ssh-rsa LOTSOFEXCITINGKEYSTUFFHERE
   """]
+
+key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"
