@@ -11,7 +11,12 @@ defmodule NervesAps.Monitor.Loop do
     {:ok, state}
   end
 
+  @way_back_when ~N[1980-01-01 00:00:00]
   def handle_info(:loop, state) do
+    Logger.warn "Checking system time"
+    if Timex.before?(Timex.now, @way_back_when)  do
+      set_system_time_from_pump()
+    end
     Logger.warn "Getting sensor values"
     response = Pummpcomm.Monitor.BloodGlucoseMonitor.get_sensor_values(20)
     Logger.warn "Got: #{inspect(response)}"
@@ -48,5 +53,14 @@ defmodule NervesAps.Monitor.Loop do
   @after_period 5 * 60 * 1000 # 5 minutes
   defp schedule_work(after_period \\ @after_period) do
     Process.send_after(self(), :loop, after_period)
+  end
+
+  defp set_system_time_from_pump do
+    with {:ok, pump_time} <- Pummpcomm.Session.Pump.read_time(),
+         utc_zoned_time <- Timex.to_datetime(pump_time, :local) |> Timex.Timezone.convert(:utc),
+         {:ok, formatted_time} <- Timex.format(utc_zoned_time, "%Y-%m-%d %H:%M:%S", :strftime) do
+      Logger.warn "Setting system time from pump to #{formatted_time} (UTC)"
+      System.cmd("date", ["-s", formatted_time])
+    end
   end
 end
