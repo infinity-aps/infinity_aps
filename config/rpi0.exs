@@ -22,3 +22,8 @@ config :nerves_firmware_ssh,
   """]
 
 key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"
+config :nerves_network, :default,
+  wlan0: [ssid: "Something", psk: "Great", key_mgmt: String.to_atom(key_mgmt)],
+  eth0: [
+    ipv4_address_method: :dhcp
+  ]
