@@ -27,11 +27,11 @@ defmodule NervesAps.Mixfile do
   def application, do: application(@target)
 
   def application("host") do
-    [extra_applications: [:logger, :nerves_uart, :timex, :twilight_informant]]
+    [extra_applications: [:logger]]
   end
   def application(_target) do
     [mod: {NervesAps.Application, []},
-     extra_applications: [:logger, :nerves_uart, :timex, :twilight_informant, :nerves_ntp]]
+     extra_applications: [:logger]]
   end
 
   def deps do
@@ -46,8 +46,7 @@ defmodule NervesAps.Mixfile do
     [ system(target),
       {:bootloader, "~> 0.1"},
       {:nerves_runtime, "~> 0.4"},
-      {:nerves_init_gadget, github: "fhunleth/nerves_init_gadget"},
-      {:nerves_ntp, github: "evokly/nerves_ntp"}
+      {:nerves_init_gadget, github: "fhunleth/nerves_init_gadget"}
     ]
   end
 
