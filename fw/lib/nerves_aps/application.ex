@@ -8,7 +8,8 @@ defmodule NervesAps.Application do
     children = [
       worker(Pummpcomm.Driver.SubgRfspy.UART, []),
       worker(Pummpcomm.Session.Pump, []),
-      worker(NervesAps.Monitor.Loop, [])
+      worker(NervesAps.Monitor.Loop, []),
+      supervisor(Phoenix.PubSub.PG2, [Nerves.PubSub, [poolsize: 1]])
     ]
 
     opts = [strategy: :one_for_one, name: NervesAps.Supervisor]
