@@ -38,6 +38,7 @@ defmodule NervesAps.Mixfile do
     [{:nerves, "~> 0.6", runtime: false},
      {:pummpcomm, path: "/Users/tmecklem/src/t1d/diy-pancreas/pummpcomm"},
      {:twilight_informant, path: "/Users/tmecklem/src/t1d/diy-pancreas/twilight_informant"},
+     {:cfg, path: "../cfg"},
      {:ui, path: "../ui"}] ++
     deps(@target)
   end

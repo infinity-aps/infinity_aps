@@ -1,6 +1,10 @@
 use Mix.Config
 
 config :logger, level: :debug
+
+config :cfg, NervesAps.Configuration,
+  file: "/root/nerves_aps.json"
+
 config :pummpcomm, :serial_driver, Pummpcomm.Driver.SubgRfspy.UART
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
 config :pummpcomm, Pummpcomm.Driver.SubgRfspy.UART, device: "/dev/ttyAMA0"
