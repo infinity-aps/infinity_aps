@@ -1,0 +1,64 @@
+<h2>NervesAPS</h2>
+<p class="lead">Configuration</p>
+
+<div class="container-fluid">
+  <div class="row">
+    <%= form_for @changeset, configuration_path(@conn, :update), [class: "form-horizontal"], fn(f) -> %>
+    <fieldset>
+      <label>Pump</label>
+
+      <div class="form-group">
+        <label for="pump_serial" class="col-sm-4 control-label">Serial Number</label>
+        <div class="col-sm-8">
+          <%= text_input f, :pump_serial, placeholder: "654321", class: "form-control", id: "pump_serial" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subg_rfspy_device" class="col-sm-4 control-label">TTY Device</label>
+        <div class="col-sm-8">
+          <%= text_input f, :subg_rfspy_device, placeholder: "/dev/ttyAMA0", class: "form-control", id: "subg_rfspy_device" %>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <label>WiFi</label>
+
+      <div class="form-group">
+        <label for="wifi_ssid" class="col-sm-4 control-label">SSID</label>
+        <div class="col-sm-8">
+          <%= text_input f, :wifi_ssid, placeholder: "Home", class: "form-control", id: "wifi_ssid" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="wifi_psk" class="col-sm-4 control-label">Password</label>
+        <div class="col-sm-8">
+          <%= text_input f, :wifi_psk, placeholder: "Really Good Password", class: "form-control", id: "wifi_psk" %>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <label>Nightscout</label>
+
+      <div class="form-group">
+        <label for="nightscout_url" class="col-sm-4 control-label">URL</label>
+        <div class="col-sm-8">
+          <%= text_input f, :nightscout_url, placeholder: "https://my.nightscout.com", class: "form-control", id: "nightscout_url" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nightscout_token" class="col-sm-4 control-label">API Token</label>
+        <div class="col-sm-8">
+          <%= text_input f, :nightscout_token, placeholder: "nervesrig-58d9276808f72f3a", class: "form-control", id: "nightscout_token" %>
+        </div>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Save and Apply</button>
+      <% end %>
+  </div>
+</div>

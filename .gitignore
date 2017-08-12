@@ -13,3 +13,4 @@ nerves_aps/.nerves
 
 # Host configuration files
 host_config.json
+fw/config/config.priv.exs

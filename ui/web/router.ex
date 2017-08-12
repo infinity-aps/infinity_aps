@@ -16,11 +16,7 @@ defmodule NervesAps.UI.Router do
   scope "/", NervesAps.UI do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
+    post "/configuration", ConfigurationController, :update
+    get "/configuration", ConfigurationController, :index
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", NervesAps.UI do
-  #   pipe_through :api
-  # end
 end

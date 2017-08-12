@@ -1,5 +1,6 @@
 defmodule NervesAps.Configuration.Server do
   use GenServer
+  alias NervesAps.Configuration.ConfigurationData
 
   def start_link(file) do
     {:ok, _pid} = GenServer.start_link(__MODULE__, Path.expand(file), name: __MODULE__)
@@ -11,8 +12,16 @@ defmodule NervesAps.Configuration.Server do
     read_config(file)
   end
 
+  def get_config() do
+    GenServer.call __MODULE__, {:get_config}
+  end
+
   def get_config(key) do
     GenServer.call __MODULE__, {:get_config, key}
+  end
+
+  def set_config(config = %ConfigurationData{}) do
+    GenServer.call __MODULE__, {:set_config, config}
   end
 
   def set_config(key, value) do
@@ -23,8 +32,16 @@ defmodule NervesAps.Configuration.Server do
     GenServer.call __MODULE__, {:save_config}
   end
 
+  def handle_call({:get_config}, _from, state = {_file, config_map}) do
+    {:reply, config_map, state}
+  end
+
   def handle_call({:get_config, key}, _from, state = {_file, config_map}) do
     {:reply, Map.get(config_map, key), state}
+  end
+
+  def handle_call({:set_config, new_config = %ConfigurationData{}}, _from, {file, config_map}) do
+    {:reply, :ok, {file, new_config}}
   end
 
   def handle_call({:set_config, key, value}, _from, {file, config_map}) do
@@ -38,14 +55,14 @@ defmodule NervesAps.Configuration.Server do
   defp read_config(file) do
     with {:ok, config_data} <- File.read(file),
          {:ok, config_map} <- decode_config(config_data) do
-      {:ok, {file, atomize_keys(config_map)}}
+      {:ok, {file, config_map}}
     else
       error -> {:error, "Unable to read configuration data: #{error}"}
     end
   end
 
-  defp decode_config(<<>>), do: {:ok, %{}}
-  defp decode_config(config_data) when is_binary(config_data), do: Poison.decode(config_data)
+  defp decode_config(<<>>), do: {:ok, %ConfigurationData{}}
+  defp decode_config(config_data) when is_binary(config_data), do: Poison.decode(config_data, as: %ConfigurationData{})
 
   defp atomize_keys(config_map) do
     config_map
