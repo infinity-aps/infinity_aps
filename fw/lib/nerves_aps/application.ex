@@ -1,6 +1,7 @@
 defmodule NervesAps.Application do
   use Application
   require Logger
+  alias NervesAps.Configuration.Server
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
@@ -8,11 +9,19 @@ defmodule NervesAps.Application do
     children = [
       supervisor(NervesAps.PummpcommSupervisor, []),
       worker(NervesAps.Monitor.Loop, []),
+      worker(Task, [fn -> init_network() end], restart: :transient, id: Nerves.Init.Network),
       supervisor(Phoenix.PubSub.PG2, [Nerves.PubSub, [poolsize: 1]])
     ]
 
     opts = [strategy: :one_for_one, name: NervesAps.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  @key_mgmt :"WPA-PSK"
+  defp init_network() do
+    ssid = Server.get_config(:wifi_ssid)
+    psk = Server.get_config(:wifi_psk)
+    Nerves.Network.setup "wlan0", ssid: ssid, psk: psk, key_mgmt: @key_mgmt
   end
 end
 
@@ -29,8 +38,6 @@ defmodule NervesAps.PummpcommSupervisor do
   def start_workers(sup) do
     Supervisor.start_child(sup, worker(Pummpcomm.Driver.SubgRfspy.UART, [Server.get_config(:subg_rfspy_device)]))
     Supervisor.start_child(sup, worker(Pummpcomm.Session.Pump, [Server.get_config(:pump_serial)]))
-
-    opts = [strategy: :one_for_one, name: NervesAps.PummpcommSupervisor]
   end
 
   def init(_) do
