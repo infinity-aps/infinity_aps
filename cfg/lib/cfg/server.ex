@@ -1,5 +1,6 @@
 defmodule NervesAps.Configuration.Server do
   use GenServer
+  require Logger
   alias NervesAps.Configuration.ConfigurationData
 
   def start_link(file) do
@@ -40,7 +41,7 @@ defmodule NervesAps.Configuration.Server do
     {:reply, Map.get(config_map, key), state}
   end
 
-  def handle_call({:set_config, new_config = %ConfigurationData{}}, _from, {file, config_map}) do
+  def handle_call({:set_config, new_config = %ConfigurationData{}}, _from, {file, _old_config}) do
     {:reply, :ok, {file, new_config}}
   end
 
@@ -64,14 +65,13 @@ defmodule NervesAps.Configuration.Server do
   defp decode_config(<<>>), do: {:ok, %ConfigurationData{}}
   defp decode_config(config_data) when is_binary(config_data), do: Poison.decode(config_data, as: %ConfigurationData{})
 
-  defp atomize_keys(config_map) do
-    config_map
-    |> Enum.reduce(%{}, fn({key, value}, acc) -> Map.put(acc, String.to_atom(key), value) end)
-  end
-
   defp write_config({file, config_map}) do
     with {:ok, config_data} <- Poison.encode(config_map),
          :ok <- File.write(file, config_data) do
+
+      # Temporary way to apply configuration
+      Logger.info("Configuration saved, rebooting")
+      Nerves.Runtime.reboot()
       :ok
     else
       error -> {:error, "Unable to write configuration data: #{error}"}
