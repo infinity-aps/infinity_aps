@@ -1,5 +1,6 @@
 defmodule NervesAps.Monitor.NightscoutEntriesReporter do
   require Logger
+  alias NervesAps.Configuration.Server
 
   @minutes_back 480
   def loop do
@@ -10,12 +11,14 @@ defmodule NervesAps.Monitor.NightscoutEntriesReporter do
     end
   end
 
-  # @entries_url "#{Application.get_env(:nightscout, :url)}/api/v1/entries.json?token=#{Application.get_env(:nightscout, :token)}"
-  @entries_url "https://elixir-ns.mecklem.com/api/v1/entries.json?token=nervesrig-58d9278808e72f3a"
   def report_sgvs(entries) do
     entries
     |> Enum.filter_map(&filter_sgv/1, &map_sgv/1)
-    |> TwilightInformant.Entry.post(@entries_url)
+    |> TwilightInformant.Entry.post(entries_url())
+  end
+
+  defp entries_url do
+    "#{Server.get_config(:nightscout_url)}/api/v1/entries.json?token=#{Server.get_config(:nightscout_token)}"
   end
 
   defp filter_sgv({:sensor_glucose_value, _}), do: true

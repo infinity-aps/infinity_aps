@@ -1,9 +1,8 @@
 defmodule NervesAps.Monitor.NightscoutTreatmentsReporter do
   require Logger
+  alias NervesAps.Configuration.Server
 
   # @treatments_url "#{Application.get_env(:nightscout, :url)}/api/v1/treatments.json?token=#{Application.get_env(:nightscout, :token)}"
-  @treatments_url "https://elixir-ns.mecklem.com/api/v1/treatments.json?token=nervesrig-58d9278808e72f3a"
-
   def loop do
     Logger.warn "Getting history values"
     history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(4800)
@@ -26,7 +25,11 @@ defmodule NervesAps.Monitor.NightscoutTreatmentsReporter do
     |> Enum.reduce([], &group_history/2)
     |> Enum.reverse
     |> Enum.map(&map_history/1)
-    |> TwilightInformant.Treatment.post(@treatments_url)
+    |> TwilightInformant.Treatment.post(treatments_url())
+  end
+
+  defp treatments_url do
+    "#{Server.get_config(:nightscout_url)}/api/v1/treatments.json?token=#{Server.get_config(:nightscout_token)}"
   end
 
   # , :basal_profile_start
