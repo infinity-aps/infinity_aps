@@ -9,9 +9,10 @@ defmodule NervesAps.Application do
     children = [
       supervisor(NervesAps.PummpcommSupervisor, []),
       worker(NervesAps.Monitor.Loop, []),
-      worker(Task, [fn -> init_network() end], restart: :transient, id: Nerves.Init.Network),
       supervisor(Phoenix.PubSub.PG2, [Nerves.PubSub, [poolsize: 1]])
     ]
+
+    init_network()
 
     opts = [strategy: :one_for_one, name: NervesAps.Supervisor]
     Supervisor.start_link(children, opts)
