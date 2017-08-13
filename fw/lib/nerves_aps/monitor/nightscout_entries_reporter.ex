@@ -12,9 +12,12 @@ defmodule NervesAps.Monitor.NightscoutEntriesReporter do
   end
 
   def report_sgvs(entries) do
-    entries
+    Logger.debug "Posting entries"
+    response = entries
     |> Enum.filter_map(&filter_sgv/1, &map_sgv/1)
     |> TwilightInformant.Entry.post(entries_url())
+    Logger.debug "Finished posting #{inspect response}"
+    response
   end
 
   defp entries_url do
