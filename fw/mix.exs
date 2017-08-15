@@ -52,6 +52,7 @@ defmodule NervesAps.Mixfile do
     ]
   end
 
+  def system("aps_rpi0"), do: {:nerves_aps_system_rpi0, ">= 0.0.0", github: "tmecklem/nerves_aps_system_rpi0", branch: "master", runtime: false}
   def system("rpi"), do: {:nerves_system_rpi, ">= 0.0.0", runtime: false}
   def system("rpi0"), do: {:nerves_system_rpi0, ">= 0.0.0", runtime: false}
   def system("rpi2"), do: {:nerves_system_rpi2, ">= 0.0.0", runtime: false}
