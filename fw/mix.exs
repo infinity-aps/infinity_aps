@@ -36,7 +36,7 @@ defmodule NervesAps.Mixfile do
 
   def deps do
     [{:nerves, "~> 0.6", runtime: false},
-     {:pummpcomm, "~> 2.1.1"},
+     {:pummpcomm, "~> 2.1.2"},
      {:twilight_informant, path: "/Users/tmecklem/src/t1d/diy-pancreas/twilight_informant"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
