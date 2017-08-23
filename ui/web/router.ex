@@ -18,5 +18,8 @@ defmodule NervesAps.UI.Router do
 
     post "/configuration", ConfigurationController, :update
     get "/configuration", ConfigurationController, :index
+
+    post "/preferences", PreferencesController, :update
+    get "/preferences", PreferencesController, :index
   end
 end
