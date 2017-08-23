@@ -2,13 +2,26 @@ defmodule NervesAps.Monitor.NightscoutEntriesReporter do
   require Logger
   alias NervesAps.Configuration.Server
 
-  @minutes_back 480
+  @minutes_back 1440
   def loop do
     Logger.debug "Getting sensor values for #{@minutes_back} minutes back"
     case Pummpcomm.Monitor.BloodGlucoseMonitor.get_sensor_values(@minutes_back) do
-      {:ok, entries} -> report_sgvs(entries)
+      {:ok, entries} ->
+        write_oref0(entries)
+        report_sgvs(entries)
       response       -> Logger.warn "Got: #{inspect(response)}"
     end
+  end
+
+  def write_oref0(entries) do
+    File.mkdir_p!("/root/loop")
+
+    encoded = entries
+    |> Enum.filter(&filter_sgv/1)
+    |> Enum.map(&map_sgv/1)
+    |> Poison.encode!()
+
+    File.write!("/root/loop/cgm.json", encoded, [:binary])
   end
 
   def report_sgvs(entries) do

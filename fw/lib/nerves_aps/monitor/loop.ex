@@ -19,6 +19,7 @@ defmodule NervesAps.Monitor.Loop do
       {:ok} ->
         NervesAps.Monitor.NightscoutEntriesReporter.loop()
         NervesAps.Monitor.NightscoutTreatmentsReporter.loop()
+        NervesAps.Monitor.CurrentBasalMonitor.loop()
       {:error, error} ->
         Logger.error("Unable to set system time: #{inspect(error)}")
     end
