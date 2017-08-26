@@ -1,5 +1,5 @@
-defmodule NervesAps.UI.Router do
-  use NervesAps.UI.Web, :router
+defmodule InfinityAPS.UI.Router do
+  use InfinityAPS.UI.Web, :router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -13,7 +13,7 @@ defmodule NervesAps.UI.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", NervesAps.UI do
+  scope "/", InfinityAPS.UI do
     pipe_through :browser # Use the default browser stack
 
     post "/configuration", ConfigurationController, :update

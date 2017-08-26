@@ -19,7 +19,7 @@ use Mix.Config
 # If desired, both `http:` and `https:` keys can be
 # configured to run both http and https servers on
 # different ports.
-config :ui, NervesAps.UI.Endpoint,
+config :ui, InfinityAPS.UI.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -28,7 +28,7 @@ config :ui, NervesAps.UI.Endpoint,
 
 
 # Watch static and templates for browser reloading.
-config :ui, NervesAps.UI.Endpoint,
+config :ui, InfinityAPS.UI.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},

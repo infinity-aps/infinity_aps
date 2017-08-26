@@ -1,4 +1,4 @@
-# NervesAps.UI
+# InfinityAPS.UI
 
 To start your Phoenix app:
 

@@ -1,4 +1,4 @@
-defmodule NervesAps.UI.ErrorHelpers do
+defmodule InfinityAPS.UI.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -32,9 +32,9 @@ defmodule NervesAps.UI.ErrorHelpers do
     #     dgettext "errors", "is invalid"
     #
     if count = opts[:count] do
-      Gettext.dngettext(NervesAps.UI.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(InfinityAPS.UI.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(NervesAps.UI.Gettext, "errors", msg, opts)
+      Gettext.dgettext(InfinityAPS.UI.Gettext, "errors", msg, opts)
     end
   end
 end

@@ -1,3 +1,3 @@
-defmodule NervesAps.UI.ConfigurationView do
-  use NervesAps.UI.Web, :view
+defmodule InfinityAPS.UI.ConfigurationView do
+  use InfinityAPS.UI.Web, :view
 end

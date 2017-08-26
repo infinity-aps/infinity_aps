@@ -1,6 +1,6 @@
-defmodule NervesAps.Monitor.NightscoutTreatmentsReporter do
+defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
   require Logger
-  alias NervesAps.Configuration.Server
+  alias InfinityAPS.Configuration.Server
 
   # @treatments_url "#{Application.get_env(:nightscout, :url)}/api/v1/treatments.json?token=#{Application.get_env(:nightscout, :token)}"
   def loop do

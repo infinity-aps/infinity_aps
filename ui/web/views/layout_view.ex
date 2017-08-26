@@ -1,3 +1,3 @@
-defmodule NervesAps.UI.LayoutView do
-  use NervesAps.UI.Web, :view
+defmodule InfinityAPS.UI.LayoutView do
+  use InfinityAPS.UI.Web, :view
 end

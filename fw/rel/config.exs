@@ -26,8 +26,8 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :nerves_aps do
-  set version: current_version(:nerves_aps)
+release :infinity_aps do
+  set version: current_version(:infinity_aps)
   plugin Bootloader.Plugin
   if System.get_env("NERVES_SYSTEM") do
     set dev_mode: false

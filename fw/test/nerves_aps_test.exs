@@ -1,6 +1,6 @@
-defmodule NervesApsTest do
+defmodule InfinityAPSTest do
   use ExUnit.Case
-  doctest NervesAps
+  doctest InfinityAPS
 
   test "the truth" do
     assert 1 + 1 == 2

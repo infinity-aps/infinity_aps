@@ -4,7 +4,7 @@
 ##  The cookie needs to be configured prior to vm boot for
 ##  for read only filesystem.
 
-# -name nerves_aps@0.0.0.0
+# -name infinity_aps@0.0.0.0
 -setcookie C+wUcI4+WqHXEKuH8ufh9WRU+73ijZRBZctB8HS04VTmRY2rj/NAGVV26m7igHJU
 
 ## Use Ctrl-C to interrupt the current shell rather than invoking the emulator's

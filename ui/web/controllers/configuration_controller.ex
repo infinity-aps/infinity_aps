@@ -1,13 +1,13 @@
-defmodule NervesAps.UI.ConfigurationController do
-  use NervesAps.UI.Web, :controller
-  alias NervesAps.Configuration.ConfigurationData
-  alias NervesAps.Configuration.Server
+defmodule InfinityAPS.UI.ConfigurationController do
+  use InfinityAPS.UI.Web, :controller
+  alias InfinityAPS.Configuration.ConfigurationData
+  alias InfinityAPS.Configuration.Server
 
   @types %{pump_serial: :string, subg_rfspy_device: :string,
           wifi_ssid: :string, wifi_psk: :string,
           nightscout_url: :string, nightscout_token: :string}
   def index(conn, _params) do
-    data = NervesAps.Configuration.Server.get_config()
+    data = InfinityAPS.Configuration.Server.get_config()
     render_config_data(conn, data)
   end
 

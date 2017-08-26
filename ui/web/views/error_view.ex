@@ -1,5 +1,5 @@
-defmodule NervesAps.UI.ErrorView do
-  use NervesAps.UI.Web, :view
+defmodule InfinityAPS.UI.ErrorView do
+  use InfinityAPS.UI.Web, :view
 
   def render("404.html", _assigns) do
     "Page not found"

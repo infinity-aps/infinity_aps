@@ -1,4 +1,4 @@
-defmodule NervesAps.Configuration.Preferences do
+defmodule InfinityAPS.Configuration.Preferences do
   defstruct max_iob: 0,
     max_daily_safety_multiplier: 3,
     current_basal_safety_multiplier: 4,

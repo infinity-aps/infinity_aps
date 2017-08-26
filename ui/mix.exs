@@ -1,4 +1,4 @@
-defmodule NervesAps.UI.Mixfile do
+defmodule InfinityAPS.UI.Mixfile do
   use Mix.Project
 
   def project do
@@ -18,7 +18,7 @@ defmodule NervesAps.UI.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {NervesAps.UI, []},
+      mod: {InfinityAPS.UI, []},
       extra_applications: [:logger]
     ]
   end

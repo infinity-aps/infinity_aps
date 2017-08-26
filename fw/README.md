@@ -1,10 +1,10 @@
-# NervesAPS
+# Infinity APS
 
-NervesAPS is an Elixir-based OpenAPS loop. It is in early stages of development using https://github.com/tmecklem/pummpcomm for pump communication/decoding and https://github.com/tmecklem/twilight_informant for Nightscout integration.
+Infinity APS is an Elixir-based OpenAPS loop. It is in early stages of development using https://github.com/tmecklem/pummpcomm for pump communication/decoding and https://github.com/tmecklem/twilight_informant for Nightscout integration.
 
 ## Why does this project exist?
 
-NervesAPS is a project to help people with Type 1 Diabetes "close the loop". A closed loop is a system that monitors blood sugar, insulin delivery, and other factors, predicts future blood glucose and insulin levels, and controls the flow of insulin without manual intervention.
+Infinity APS is a project to help people with Type 1 Diabetes "close the loop". A closed loop is a system that monitors blood sugar, insulin delivery, and other factors, predicts future blood glucose and insulin levels, and controls the flow of insulin without manual intervention.
 
 ## Project Goals
 
@@ -17,4 +17,4 @@ NervesAPS is a project to help people with Type 1 Diabetes "close the loop". A c
 
 ## How can I get involved?
 
-NervesAPS is still very early in development. Your help is needed to push it from a CGM monitoring only solution to a fully closed loop. Join the [Type 1 Diabetes + Elixir Discord server](https://discord.gg/XfJ78mA) and learn more about how to get involved.
+Infinity APS is still very early in development. Your help is needed to push it from a CGM monitoring only solution to a fully closed loop. Join the [Type 1 Diabetes + Elixir Discord server](https://discord.gg/XfJ78mA) and learn more about how to get involved.

@@ -1,4 +1,4 @@
-defmodule NervesAps.UI.ConnCase do
+defmodule InfinityAPS.UI.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -20,10 +20,10 @@ defmodule NervesAps.UI.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
 
-      import NervesAps.UI.Router.Helpers
+      import InfinityAPS.UI.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint NervesAps.UI.Endpoint
+      @endpoint InfinityAPS.UI.Endpoint
     end
   end
 

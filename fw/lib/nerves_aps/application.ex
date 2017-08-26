@@ -1,20 +1,20 @@
-defmodule NervesAps.Application do
+defmodule InfinityAPS.Application do
   use Application
   require Logger
-  alias NervesAps.Configuration.Server
+  alias InfinityAPS.Configuration.Server
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(NervesAps.PummpcommSupervisor, []),
-      worker(NervesAps.Monitor.Loop, []),
+      supervisor(InfinityAPS.PummpcommSupervisor, []),
+      worker(InfinityAPS.Monitor.Loop, []),
       supervisor(Phoenix.PubSub.PG2, [Nerves.PubSub, [poolsize: 1]])
     ]
 
     init_network()
 
-    opts = [strategy: :one_for_one, name: NervesAps.Supervisor]
+    opts = [strategy: :one_for_one, name: InfinityAPS.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -26,9 +26,9 @@ defmodule NervesAps.Application do
   end
 end
 
-defmodule NervesAps.PummpcommSupervisor do
+defmodule InfinityAPS.PummpcommSupervisor do
   use Supervisor
-  alias NervesAps.Configuration.Server
+  alias InfinityAPS.Configuration.Server
 
   def start_link() do
     result = {:ok, sup} = Supervisor.start_link(__MODULE__, [])

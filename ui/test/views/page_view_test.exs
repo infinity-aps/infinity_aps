@@ -1,3 +1,3 @@
-defmodule NervesAps.UI.PageViewTest do
-  use NervesAps.UI.ConnCase, async: true
+defmodule InfinityAPS.UI.PageViewTest do
+  use InfinityAPS.UI.ConnCase, async: true
 end

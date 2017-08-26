@@ -1,4 +1,4 @@
-defmodule NervesAps.UI.ChannelCase do
+defmodule InfinityAPS.UI.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -22,7 +22,7 @@ defmodule NervesAps.UI.ChannelCase do
 
 
       # The default endpoint for testing
-      @endpoint NervesAps.UI.Endpoint
+      @endpoint InfinityAPS.UI.Endpoint
     end
   end
 

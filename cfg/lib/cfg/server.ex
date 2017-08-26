@@ -1,7 +1,7 @@
-defmodule NervesAps.Configuration.Server do
+defmodule InfinityAPS.Configuration.Server do
   use GenServer
   require Logger
-  alias NervesAps.Configuration.ConfigurationData
+  alias InfinityAPS.Configuration.ConfigurationData
 
   def start_link(file) do
     {:ok, _pid} = GenServer.start_link(__MODULE__, Path.expand(file), name: __MODULE__)

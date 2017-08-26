@@ -1,4 +1,4 @@
-defmodule NervesAps.Mixfile do
+defmodule InfinityAPS.Mixfile do
   use Mix.Project
 
   @target System.get_env("MIX_TARGET") || "host"
@@ -10,7 +10,7 @@ defmodule NervesAps.Mixfile do
   """, :reset])
 
   def project do
-    [app: :nerves_aps,
+    [app: :infinity_aps,
      version: "0.1.0",
      elixir: "~> 1.4.0",
      target: @target,
@@ -30,13 +30,13 @@ defmodule NervesAps.Mixfile do
     [extra_applications: [:logger]]
   end
   def application(_target) do
-    [mod: {NervesAps.Application, []},
+    [mod: {InfinityAPS.Application, []},
      extra_applications: [:logger]]
   end
 
   def deps do
     [{:nerves, "~> 0.6", runtime: false},
-     {:pummpcomm, "~> 2.1.2"},
+     {:pummpcomm, "~> 2.1.3"},
      {:twilight_informant, path: "/Users/tmecklem/src/t1d/diy-pancreas/twilight_informant"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
@@ -54,7 +54,7 @@ defmodule NervesAps.Mixfile do
     ]
   end
 
-  def system("aps_rpi0"), do: {:nerves_aps_system_rpi0, ">= 0.0.0", github: "tmecklem/nerves_aps_system_rpi0", branch: "master", runtime: false}
+  # def system("infinity_rpi0"), do: {:infinity_system_rpi0, ">= 0.0.0", github: "infinity-aps/infinity_system_rpi0", branch: "master", runtime: false}
   def system("rpi"), do: {:nerves_system_rpi, ">= 0.0.0", runtime: false}
   def system("rpi0"), do: {:nerves_system_rpi0, ">= 0.0.0", runtime: false}
   def system("rpi2"), do: {:nerves_system_rpi2, ">= 0.0.0", runtime: false}

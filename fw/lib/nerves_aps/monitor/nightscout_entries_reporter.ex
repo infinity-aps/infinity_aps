@@ -1,6 +1,6 @@
-defmodule NervesAps.Monitor.NightscoutEntriesReporter do
+defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
   require Logger
-  alias NervesAps.Configuration.Server
+  alias InfinityAPS.Configuration.Server
 
   @minutes_back 1440
   def loop do

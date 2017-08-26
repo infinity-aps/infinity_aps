@@ -1,7 +1,7 @@
-defmodule NervesAps.UI.Endpoint do
+defmodule InfinityAPS.UI.Endpoint do
   use Phoenix.Endpoint, otp_app: :ui
 
-  socket "/socket", NervesAps.UI.UserSocket
+  socket "/socket", InfinityAPS.UI.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -38,5 +38,5 @@ defmodule NervesAps.UI.Endpoint do
     key: "_ui_key",
     signing_salt: "ZrDBsrFc"
 
-  plug NervesAps.UI.Router
+  plug InfinityAPS.UI.Router
 end

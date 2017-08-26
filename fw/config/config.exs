@@ -9,4 +9,4 @@ import_config "#{Mix.Project.config[:target]}.exs"
 
 config :bootloader,
   init: [:nerves_runtime],
-  app: :nerves_aps
+  app: :infinity_aps

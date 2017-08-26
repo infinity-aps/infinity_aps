@@ -1,4 +1,4 @@
-defmodule NervesAps.Monitor.CurrentBasalMonitor do
+defmodule InfinityAPS.Monitor.CurrentBasalMonitor do
   require Logger
 
   def loop do

@@ -1,8 +1,8 @@
-defmodule NervesAps.UI.PreferencesController do
-  use NervesAps.UI.Web, :controller
-  alias NervesAps.Configuration.ConfigurationData
-  alias NervesAps.Configuration.Preferences
-  alias NervesAps.Configuration.Server
+defmodule InfinityAPS.UI.PreferencesController do
+  use InfinityAPS.UI.Web, :controller
+  alias InfinityAPS.Configuration.ConfigurationData
+  alias InfinityAPS.Configuration.Preferences
+  alias InfinityAPS.Configuration.Server
 
   @types %{max_iob: :string,
            max_daily_safety_multiplier: :string,

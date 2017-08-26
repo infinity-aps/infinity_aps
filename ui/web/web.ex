@@ -1,12 +1,12 @@
-defmodule NervesAps.UI.Web do
+defmodule InfinityAPS.UI.Web do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use NervesAps.UI.Web, :controller
-      use NervesAps.UI.Web, :view
+      use InfinityAPS.UI.Web, :controller
+      use InfinityAPS.UI.Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -25,16 +25,16 @@ defmodule NervesAps.UI.Web do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: NervesAps.UI
+      use Phoenix.Controller, namespace: InfinityAPS.UI
 
-      import NervesAps.UI.Router.Helpers
-      import NervesAps.UI.Gettext
+      import InfinityAPS.UI.Router.Helpers
+      import InfinityAPS.UI.Gettext
     end
   end
 
   def view do
     quote do
-      use Phoenix.View, root: "web/templates", namespace: NervesAps.UI
+      use Phoenix.View, root: "web/templates", namespace: InfinityAPS.UI
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
@@ -42,9 +42,9 @@ defmodule NervesAps.UI.Web do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import NervesAps.UI.Router.Helpers
-      import NervesAps.UI.ErrorHelpers
-      import NervesAps.UI.Gettext
+      import InfinityAPS.UI.Router.Helpers
+      import InfinityAPS.UI.ErrorHelpers
+      import InfinityAPS.UI.Gettext
     end
   end
 
@@ -57,7 +57,7 @@ defmodule NervesAps.UI.Web do
   def channel do
     quote do
       use Phoenix.Channel
-      import NervesAps.UI.Gettext
+      import InfinityAPS.UI.Gettext
     end
   end
 

@@ -1,4 +1,4 @@
-defmodule NervesAps.Monitor.Loop do
+defmodule InfinityAPS.Monitor.Loop do
   use GenServer
   require Logger
 
@@ -17,9 +17,9 @@ defmodule NervesAps.Monitor.Loop do
 
     case set_system_time_from_pump(Timex.before?(Timex.now, @way_back_when)) do
       {:ok} ->
-        NervesAps.Monitor.NightscoutEntriesReporter.loop()
-        NervesAps.Monitor.NightscoutTreatmentsReporter.loop()
-        NervesAps.Monitor.CurrentBasalMonitor.loop()
+        InfinityAPS.Monitor.NightscoutEntriesReporter.loop()
+        InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop()
+        InfinityAPS.Monitor.CurrentBasalMonitor.loop()
       {:error, error} ->
         Logger.error("Unable to set system time: #{inspect(error)}")
     end

@@ -1,5 +1,5 @@
-defmodule NervesAps.UI.PageControllerTest do
-  use NervesAps.UI.ConnCase
+defmodule InfinityAPS.UI.PageControllerTest do
+  use InfinityAPS.UI.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"

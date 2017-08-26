@@ -1,5 +1,5 @@
-defmodule NervesAps.Configuration.ConfigurationData do
-  alias NervesAps.Configuration.Preferences
+defmodule InfinityAPS.Configuration.ConfigurationData do
+  alias InfinityAPS.Configuration.Preferences
 
   defstruct pump_serial: nil,
     subg_rfspy_device: nil,

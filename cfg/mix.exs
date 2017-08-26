@@ -1,4 +1,4 @@
-defmodule NervesAps.Configuration.Mixfile do
+defmodule InfinityAPS.Configuration.Mixfile do
   use Mix.Project
 
   def project do
@@ -12,7 +12,7 @@ defmodule NervesAps.Configuration.Mixfile do
 
   def application do
     [extra_applications: [:logger],
-     mod: {NervesAps.Configuration.Application, []}]
+     mod: {InfinityAPS.Configuration.Application, []}]
   end
 
   defp deps do
