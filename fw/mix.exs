@@ -37,7 +37,7 @@ defmodule InfinityAPS.Mixfile do
   def deps do
     [{:nerves, "~> 0.6", runtime: false},
      {:pummpcomm, "~> 2.1.3"},
-     {:twilight_informant, path: "/Users/tmecklem/src/t1d/diy-pancreas/twilight_informant"},
+     {:twilight_informant, github: "infinity-aps/twilight_informant"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
      {:cfg, path: "../cfg"},
