@@ -14,7 +14,7 @@ defmodule InfinityAPS.Mixfile do
      version: "0.1.0",
      elixir: "~> 1.4.0",
      target: @target,
-     archives: [nerves_bootstrap: "~> 0.4"],
+     archives: [nerves_bootstrap: "~> 0.6.1"],
      deps_path: "deps/#{@target}",
      build_path: "_build/#{@target}",
      lockfile: "mix.lock.#{@target}",
@@ -54,7 +54,7 @@ defmodule InfinityAPS.Mixfile do
     ]
   end
 
-  # def system("infinity_rpi0"), do: {:infinity_system_rpi0, ">= 0.0.0", github: "infinity-aps/infinity_system_rpi0", branch: "master", runtime: false}
+  def system("infinity_rpi0"), do: {:infinity_system_rpi0, ">= 0.0.0", github: "infinity-aps/infinity_system_rpi0", tag: "v0.17.0", runtime: false}
   def system("rpi"), do: {:nerves_system_rpi, ">= 0.0.0", runtime: false}
   def system("rpi0"), do: {:nerves_system_rpi0, ">= 0.0.0", runtime: false}
   def system("rpi2"), do: {:nerves_system_rpi2, ">= 0.0.0", runtime: false}
