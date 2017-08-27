@@ -14,14 +14,15 @@ defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
   end
 
   def write_oref0(entries) do
-    File.mkdir_p!("/root/loop")
+    loop_dir = Application.get_env(InfinityAPS, :loop_directory)
+    File.mkdir_p!(loop_dir)
 
     encoded = entries
     |> Enum.filter(&filter_sgv/1)
     |> Enum.map(&map_sgv/1)
     |> Poison.encode!()
 
-    File.write!("/root/loop/cgm.json", encoded, [:binary])
+    File.write!("#{loop_dir}/cgm.json", encoded, [:binary])
   end
 
   def report_sgvs(entries) do

@@ -12,7 +12,9 @@ defmodule InfinityAPS.Application do
       supervisor(Phoenix.PubSub.PG2, [Nerves.PubSub, [poolsize: 1]])
     ]
 
-    init_network()
+    if !Application.get_env(InfinityAPS, :host_mode) do
+      init_network()
+    end
 
     opts = [strategy: :one_for_one, name: InfinityAPS.Supervisor]
     Supervisor.start_link(children, opts)
@@ -20,6 +22,7 @@ defmodule InfinityAPS.Application do
 
   @key_mgmt :"WPA-PSK"
   defp init_network() do
+    Logger.info fn() -> "Initializing Network" end
     ssid = Server.get_config(:wifi_ssid)
     psk = Server.get_config(:wifi_psk)
     Nerves.Network.setup "wlan0", ssid: ssid, psk: psk, key_mgmt: @key_mgmt

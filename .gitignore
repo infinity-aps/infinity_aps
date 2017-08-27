@@ -11,6 +11,8 @@ nerves_aps/.nerves
 # Generate on crash by the VM
 */erl_crash.dump
 
-# Host configuration files
-host_config.json
+# Host loop files
+host_root
+
+# private configuration
 fw/config/config.priv.exs

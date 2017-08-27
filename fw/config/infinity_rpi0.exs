@@ -5,6 +5,10 @@ config :logger, level: :debug
 config :cfg, InfinityAPS.Configuration,
   file: "/root/infinity_aps.json"
 
+config InfinityAPS,
+  loop_directory: "/root/loop",
+  host_mode: false
+
 config :pummpcomm, :serial_driver, Pummpcomm.Driver.SubgRfspy.UART
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
 config :pummpcomm, :cgm, Pummpcomm.Session.Pump

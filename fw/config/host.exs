@@ -1,12 +1,17 @@
 use Mix.Config
 
 config :logger, level: :debug
+
 config :cfg, InfinityAPS.Configuration,
-  file: "#{File.cwd!}/../host_config.json"
+  file: "#{File.cwd!}/../host_root/host_config.json"
+
+config InfinityAPS,
+  loop_directory: "#{File.cwd!}/../host_root/loop",
+  host_mode: true
 
 config :pummpcomm, :serial_driver, Pummpcomm.Driver.SubgRfspy.UART
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
-config :pummpcomm, :cgm, Pummpcomm.Session.PumpFake
+config :pummpcomm, :cgm, Pummpcomm.Session.Pump
 
 config :ui, InfinityAPS.UI.Endpoint,
   http: [port: 4000],

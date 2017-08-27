@@ -11,9 +11,10 @@ defmodule InfinityAPS.Monitor.CurrentBasalMonitor do
   end
 
   def write_oref0(temp_basal) do
-    File.mkdir_p!("/root/loop")
+    loop_dir = Application.get_env(InfinityAPS, :loop_directory)
+    File.mkdir_p!(loop_dir)
 
     encoded =  Poison.encode!(%{duration: temp_basal.duration, rate: temp_basal.units_per_hour, temp: temp_basal.type})
-    File.write!("/root/loop/temp_basal.json", encoded, [:binary])
+    File.write!("#{loop_dir}/temp_basal.json", encoded, [:binary])
   end
 end

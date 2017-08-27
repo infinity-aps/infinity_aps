@@ -26,17 +26,15 @@ defmodule InfinityAPS.Mixfile do
 
   def application, do: application(@target)
 
-  def application("host") do
-    [extra_applications: [:logger]]
-  end
-  def application(_target) do
+  def application(target) do
     [mod: {InfinityAPS.Application, []},
+     env: [target: target],
      extra_applications: [:logger]]
   end
 
   def deps do
     [{:nerves, "~> 0.6", runtime: false},
-     {:pummpcomm, "~> 2.1.4"},
+     {:pummpcomm, "~> 2.1.6"},
      {:twilight_informant, github: "infinity-aps/twilight_informant"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
