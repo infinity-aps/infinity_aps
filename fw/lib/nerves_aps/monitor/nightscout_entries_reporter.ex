@@ -14,7 +14,7 @@ defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
   end
 
   def write_oref0(entries) do
-    loop_dir = Application.get_env(InfinityAPS, :loop_directory)
+    loop_dir = Application.get_env(:infinity_aps, :loop_directory) |> Path.expand()
     File.mkdir_p!(loop_dir)
 
     encoded = entries

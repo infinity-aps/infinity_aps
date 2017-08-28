@@ -12,7 +12,7 @@ defmodule InfinityAPS.Application do
       supervisor(Phoenix.PubSub.PG2, [Nerves.PubSub, [poolsize: 1]])
     ]
 
-    if !Application.get_env(InfinityAPS, :host_mode) do
+    if !Application.get_env(:infinity_aps, :host_mode) do
       init_network()
     end
 

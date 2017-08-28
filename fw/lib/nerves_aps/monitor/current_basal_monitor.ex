@@ -11,7 +11,7 @@ defmodule InfinityAPS.Monitor.CurrentBasalMonitor do
   end
 
   def write_oref0(temp_basal) do
-    loop_dir = Application.get_env(InfinityAPS, :loop_directory)
+    loop_dir = Application.get_env(:infinity_aps, :loop_directory) |> Path.expand()
     File.mkdir_p!(loop_dir)
 
     encoded =  Poison.encode!(%{duration: temp_basal.duration, rate: temp_basal.units_per_hour, temp: temp_basal.type})

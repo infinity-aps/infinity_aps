@@ -5,7 +5,7 @@ config :logger, level: :debug
 config :cfg, InfinityAPS.Configuration,
   file: "/root/infinity_aps.json"
 
-config InfinityAPS,
+config :infinity_aps,
   loop_directory: "/root/loop",
   host_mode: false
 
