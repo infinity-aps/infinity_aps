@@ -18,8 +18,10 @@ defmodule InfinityAPS.Monitor.Loop do
     case set_system_time_from_pump(Timex.before?(Timex.now, @way_back_when)) do
       {:ok} ->
         InfinityAPS.Monitor.NightscoutEntriesReporter.loop()
+        InfinityAPS.Monitor.PumpHistoryMonitor.loop()
         InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop()
         InfinityAPS.Monitor.CurrentBasalMonitor.loop()
+        InfinityAPS.Monitor.ProfileMonitor.loop()
       {:error, error} ->
         Logger.error("Unable to set system time: #{inspect(error)}")
     end
