@@ -39,17 +39,28 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
       max_iob: preferences.max_iob,
       max_daily_safety_multiplier: preferences.max_daily_safety_multiplier,
       current_basal_safety_multiplier: preferences.current_basal_safety_multiplier,
-      # autosens_max: preferences.autosens_max,
-      # autosens_min: preferences.autosens_min,
-      # adv_target_adjustments: preferences.adv_target_adjustments,
-      # override_high_target_with_low: false,
-      # skip_neutral_temps: false,
-      # bolussnooze_dia_divisor: 2,
-      # min_5m_carbimpact: 3,
       carbratio_adjustmentratio: 1,
       dia: 4,
       model: Integer.to_string(model_number),
-      current_basal: temp_basal.units_per_hour
+      current_basal: temp_basal.units_per_hour,
+      min_bg: 80,
+      max_bg: 120,
+      sens: 30,
+      bg_targets: format_bg_targets(bg_targets)
+    }
+  end
+
+  defp format_bg_targets(bg_targets) do
+    %{
+      units: bg_targets.units,
+      user_preferred_units: bg_targets.units,
+      targets: Enum.map(bg_targets.targets, fn(target) ->
+        %{
+          min_bg: target.bg_low,
+          max_bg: target.bg_high,
+          start: Time.to_string(target.start)
+        }
+      end)
     }
   end
 

@@ -10,13 +10,6 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
     with {:ok, entries} <- history_response do
       report_treatments(entries)
     end
-
-    # Logger.warn "Getting sensor values"
-    # cgm_response = Pummpcomm.Monitor.BloodGlucoseMonitor.get_sensor_values(480)
-    # Logger.warn "Got: #{inspect(cgm_response)}"
-    # with {:ok, entries} <- cgm_response do
-    #   report_sgvs(entries)
-    # end
   end
 
   def report_treatments(entries) do
@@ -34,6 +27,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
 
   # , :basal_profile_start
   defp filter_history({entry, _}) when entry in [:bolus_normal, :bolus_wizard_estimate, :alarm_sensor, :cal_bg_for_ph], do: true
+  # defp filter_history({entry, _}) when entry in [:temp_basal, :temp_basal_duration], do: true
   defp filter_history(_), do: false
 
   defp group_history({:bolus_normal, entry_data}, acc) do
@@ -84,6 +78,14 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
     %TwilightInformant.Treatment{eventType: "Carb Correction", created_at: formatted_time(timestamp),
                                  carbs: carbohydrates, insulin: 0, glucose: bg, glucoseType: "BolusWizard"}
   end
+
+  # defp map_history({:temp_basal, %{rate: rate, rate_type: rate_type, timestamp: timestamp}}) do
+  #   %TwilightInformant.Treatment{eventType: "TempBasal", created_at: formatted_time(timestamp), "rate" => rate, "temp" => Atom.to_string(rate_type)}
+  # end
+
+  # defp map_history({:temp_basal_duration, %{duration: duration, timestamp: timestamp}}) do
+  #   %TwilightInformant.Treatment{"_type" => "TempBasalDuration", "timestamp" => formatted_time(timestamp), "duration (min)" => duration}
+  # end
 
   defp formatted_time(timestamp) do
     Timex.to_datetime(timestamp, :local)

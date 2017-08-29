@@ -7,7 +7,7 @@ defmodule InfinityAPS.Monitor.Loop do
   end
 
   def init(state) do
-    schedule_work(30_000)
+    schedule_work(5_000)
     {:ok, state}
   end
 
@@ -22,6 +22,8 @@ defmodule InfinityAPS.Monitor.Loop do
         InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop()
         InfinityAPS.Monitor.CurrentBasalMonitor.loop()
         InfinityAPS.Monitor.ProfileMonitor.loop()
+        InfinityAPS.Monitor.IOBMonitor.loop()
+        InfinityAPS.Monitor.DetermineBasal.loop()
       {:error, error} ->
         Logger.error("Unable to set system time: #{inspect(error)}")
     end
