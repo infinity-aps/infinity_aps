@@ -16,9 +16,6 @@ config :pummpcomm, :cgm, Pummpcomm.Session.Pump
 config :nerves_network,
   regulatory_domain: "US"
 
-config :nerves, :firmware,
-  rootfs_additions: "rootfs-additions"
-
 config :bootloader,
   init: [:nerves_init_gadget],
   app: :zero
