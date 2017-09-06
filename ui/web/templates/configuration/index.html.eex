@@ -8,9 +8,16 @@
       <label>Pump</label>
 
       <div class="form-group">
+        <label for="timezone" class="col-sm-4 control-label">Timezone</label>
+        <div class="col-sm-8">
+          <%= text_input f, :timezone, placeholder: "America/New_York", class: "form-control", id: "timezone" %>
+        </div>
+      </div>
+
+<div class="form-group">
         <label for="pump_serial" class="col-sm-4 control-label">Serial Number</label>
         <div class="col-sm-8">
-          <%= text_input f, :pump_serial, placeholder: "654321", class: "form-control", id: "pump_serial" %>
+          <%= text_input f, :pump_serial, type: "password", class: "form-control", id: "pump_serial" %>
         </div>
       </div>
 
@@ -35,7 +42,7 @@
       <div class="form-group">
         <label for="wifi_psk" class="col-sm-4 control-label">Password</label>
         <div class="col-sm-8">
-          <%= text_input f, :wifi_psk, placeholder: "Really Good Password", class: "form-control", id: "wifi_psk" %>
+          <%= text_input f, :wifi_psk, type: "password", class: "form-control", id: "wifi_psk" %>
         </div>
       </div>
     </fieldset>

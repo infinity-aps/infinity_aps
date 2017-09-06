@@ -1,7 +1,9 @@
 defmodule InfinityAPS.Configuration.ConfigurationData do
   alias InfinityAPS.Configuration.Preferences
 
-  defstruct pump_serial: nil,
+  defstruct timezone: nil,
+
+    pump_serial: nil,
     subg_rfspy_device: nil,
 
     wifi_ssid: nil,
