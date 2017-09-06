@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :logger, level: :debug
+config :logger, level: :info
 
 config :cfg, InfinityAPS.Configuration,
   file: "/root/infinity_aps.json"
