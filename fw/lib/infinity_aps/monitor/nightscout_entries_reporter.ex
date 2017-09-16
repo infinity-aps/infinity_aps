@@ -4,7 +4,6 @@ defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
 
   @minutes_back 1440
   def loop(local_timezone) do
-    Logger.info "Getting sensor values for #{@minutes_back} minutes back"
     case Pummpcomm.Monitor.BloodGlucoseMonitor.get_sensor_values(@minutes_back, local_timezone) do
       {:ok, entries} ->
         write_oref0(entries, local_timezone)
@@ -52,6 +51,6 @@ defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
     date_with_zone = Timex.to_datetime(entry_data.timestamp, local_timezone)
     date = DateTime.to_unix(date_with_zone, :milliseconds)
     dateString = Timex.format!(date_with_zone, "{ISO:Extended:Z}")
-    %TwilightInformant.Entry{type: "sgv", sgv: entry_data.sgv, date: date, dateString: dateString}
+    %{type: "sgv", sgv: entry_data.sgv, date: date, dateString: dateString}
   end
 end
