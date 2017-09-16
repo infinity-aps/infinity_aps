@@ -4,9 +4,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
 
   # @treatments_url "#{Application.get_env(:nightscout, :url)}/api/v1/treatments.json?token=#{Application.get_env(:nightscout, :token)}"
   def loop(local_timezone) do
-    Logger.warn "Getting history values"
     history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(4800, local_timezone)
-    Logger.warn "Got: #{inspect(history_response)}"
     with {:ok, entries} <- history_response do
       report_treatments(entries, local_timezone)
     end

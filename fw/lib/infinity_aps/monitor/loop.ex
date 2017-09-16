@@ -20,22 +20,23 @@ defmodule InfinityAPS.Monitor.Loop do
     case set_system_time_from_pump(Timex.before?(Timex.now, @way_back_when)) do
       {:ok} ->
         InfinityAPS.Monitor.NightscoutEntriesReporter.loop(local_timezone())
-        # InfinityAPS.Monitor.PumpHistoryMonitor.loop()
-        InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop(local_timezone())
+        # InfinityAPS.Monitor.PumpHistoryMonitor.loop(local_timezone())
         # InfinityAPS.Monitor.CurrentBasalMonitor.loop()
         # InfinityAPS.Monitor.ProfileMonitor.loop()
-        # InfinityAPS.Monitor.IOBMonitor.loop()
+        # InfinityAPS.Monitor.IOBMonitor.loop(local_timezone())
         # InfinityAPS.Monitor.DetermineBasal.loop()
+        # InfinityAPS.Monitor.EnactTempBasal.loop()
+        InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop(local_timezone())
         schedule_work()
       {:error, error} ->
         Logger.error("Unable to set system time: #{inspect(error)}")
-        schedule_work(5_000)
+        schedule_work(30_000)
     end
 
     {:noreply, state}
   end
 
-  @after_period 5 * 60 * 1000 # 5 minutes
+  @after_period 4 * 60 * 1000 # 4 minutes
   defp schedule_work(after_period \\ @after_period) do
     Process.send_after(self(), :loop, after_period)
   end

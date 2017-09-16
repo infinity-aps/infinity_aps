@@ -2,16 +2,16 @@ defmodule InfinityAPS.Monitor.DetermineBasal do
   require Logger
 
   def loop do
-    Logger.debug "Determining Basal!"
+    Logger.info "Determining Basal!"
 
     basal_results = determine_basal()
-    IO.inspect(basal_results)
+    Logger.info fn() -> "Determine Basal Results: #{basal_results}" end
     write_basal(basal_results)
   end
 
   defp determine_basal do
     inputs = ["iob.json", "temp_basal.json", "cgm.json", "profile.json"]
-    {basal_results, 0} = System.cmd("oref0-determine-basal", inputs, cd: loop_dir())
+    {basal_results, 0} = System.cmd("node" , ["/usr/lib/node_modules/oref0/bin/oref0-determine-basal.js" | inputs], cd: loop_dir())
     basal_results
   end
 

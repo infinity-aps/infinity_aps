@@ -2,9 +2,7 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
   require Logger
 
   def loop(local_timezone) do
-    Logger.warn "Getting history values"
     history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(4800, local_timezone)
-    Logger.warn "Got: #{inspect(history_response)}"
     with {:ok, history} <- history_response do
       write_history(history, local_timezone)
     end
