@@ -34,7 +34,7 @@ defmodule InfinityAPS.Mixfile do
 
   def deps do
     [{:nerves, "~> 0.6", runtime: false},
-     {:pummpcomm, "~> 2.1.7"},
+     {:pummpcomm, "~> 2.3.0"},
      {:twilight_informant, github: "infinity-aps/twilight_informant"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
