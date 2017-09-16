@@ -11,7 +11,7 @@ config :infinity_aps,
 
 config :pummpcomm, :serial_driver, Pummpcomm.Driver.SubgRfspy.UART
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
-config :pummpcomm, :cgm, Pummpcomm.Session.Pump
+config :pummpcomm, :cgm, Pummpcomm.Session.PumpFake
 
 config :ui, InfinityAPS.UI.Endpoint,
   http: [port: 4000],
