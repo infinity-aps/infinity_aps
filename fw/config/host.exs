@@ -9,7 +9,7 @@ config :infinity_aps,
   loop_directory: "#{File.cwd!}/../host_root/loop",
   host_mode: true
 
-config :pummpcomm, :serial_driver, Pummpcomm.Driver.SubgRfspy.UART
+config :subg_rfspy, :serial_driver, SubgRfspy.UART
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
 config :pummpcomm, :cgm, Pummpcomm.Session.PumpFake
 

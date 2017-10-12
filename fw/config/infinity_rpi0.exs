@@ -9,7 +9,7 @@ config :infinity_aps,
   loop_directory: "/root/loop",
   host_mode: false
 
-config :pummpcomm, :serial_driver, Pummpcomm.Driver.SubgRfspy.UART
+config :subg_rfspy, :serial_driver, SubgRfspy.UART
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
 config :pummpcomm, :cgm, Pummpcomm.Session.Pump
 

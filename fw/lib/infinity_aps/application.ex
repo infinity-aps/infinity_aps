@@ -2,6 +2,7 @@ defmodule InfinityAPS.Application do
   use Application
   require Logger
   alias InfinityAPS.Configuration.Server
+  alias SubgRfspy
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
@@ -40,7 +41,7 @@ defmodule InfinityAPS.PummpcommSupervisor do
   end
 
   def start_workers(sup) do
-    Supervisor.start_child(sup, worker(Pummpcomm.Driver.SubgRfspy.UART, [Server.get_config(:subg_rfspy_device)]))
+    Supervisor.start_child(sup, worker(SubgRfspy.UART, [Server.get_config(:subg_rfspy_device)]))
     Supervisor.start_child(sup, worker(Pummpcomm.Session.Pump, [Server.get_config(:pump_serial)]))
   end
 
