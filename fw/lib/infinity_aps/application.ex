@@ -2,12 +2,13 @@ defmodule InfinityAPS.Application do
   use Application
   require Logger
   alias InfinityAPS.Configuration.Server
-  alias SubgRfspy
+  alias Pummpcomm.Radio.ChipSupervisor
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
     children = [
+      ChipSupervisor.child_spec([]),
       supervisor(InfinityAPS.PummpcommSupervisor, []),
       worker(InfinityAPS.Monitor.Loop, []),
       supervisor(Phoenix.PubSub.PG2, [Nerves.PubSub, [poolsize: 1]])
@@ -41,11 +42,18 @@ defmodule InfinityAPS.PummpcommSupervisor do
   end
 
   def start_workers(sup) do
-    Supervisor.start_child(sup, worker(SubgRfspy.UART, [Server.get_config(:subg_rfspy_device)]))
-    Supervisor.start_child(sup, worker(Pummpcomm.Session.Pump, [Server.get_config(:pump_serial)]))
+    [:cgm, :pump]
+    |> Enum.uniq()
+    |> Enum.each(fn(provider) ->
+      Supervisor.start_child(sup, worker(Application.get_env(:pummpcomm, provider), [Server.get_config(:pump_serial), local_timezone()]))
+    end)
   end
 
   def init(_) do
     supervise [], strategy: :one_for_one
+  end
+
+  defp local_timezone do
+    Server.get_config(:timezone) |> Timex.Timezone.get()
   end
 end
