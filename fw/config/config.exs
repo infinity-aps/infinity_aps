@@ -6,7 +6,3 @@
 use Mix.Config
 
 import_config "#{Mix.Project.config[:target]}.exs"
-
-config :bootloader,
-  init: [:nerves_runtime],
-  app: :infinity_aps

@@ -17,8 +17,8 @@ config :nerves_network,
   regulatory_domain: "US"
 
 config :bootloader,
-  init: [:nerves_init_gadget],
-  app: :zero
+  init: [:nerves_runtime, :nerves_init_gadget],
+  app: :infinity_aps
 
 config :ui, InfinityAPS.UI.Endpoint,
   http: [port: 80],
