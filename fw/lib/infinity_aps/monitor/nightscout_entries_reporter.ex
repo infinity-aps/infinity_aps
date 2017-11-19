@@ -1,10 +1,13 @@
 defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
   require Logger
   alias InfinityAPS.Configuration.Server
+  alias InfinityAPS.Glucose.Source
+  alias Pummpcomm.Monitor.BloodGlucoseMonitor
 
   @minutes_back 1440
   def loop(local_timezone) do
-    case Pummpcomm.Monitor.BloodGlucoseMonitor.get_sensor_values(@minutes_back, local_timezone) do
+    source = %BloodGlucoseMonitor{cgm: Application.get_env(:pummpcomm, :cgm)}
+    case Source.get_sensor_values(source, @minutes_back, local_timezone) do
       {:ok, entries} ->
         write_oref0(entries, local_timezone)
         report_sgvs(entries, local_timezone)
