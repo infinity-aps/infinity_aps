@@ -33,8 +33,8 @@ defmodule InfinityAPS.Mixfile do
   end
 
   def deps do
-    [{:nerves, "~> 0.6", runtime: false},
-     {:pummpcomm, "~> 2.3.0"},
+    [{:nerves, "~> 0.7", runtime: false},
+     {:pummpcomm, github: "infinity-aps/pummpcomm"},
      {:twilight_informant, github: "infinity-aps/twilight_informant"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
@@ -47,12 +47,12 @@ defmodule InfinityAPS.Mixfile do
   def deps(target) do
     [ system(target),
       {:bootloader, "~> 0.1"},
-      {:nerves_runtime, "~> 0.4"},
-      {:nerves_init_gadget, github: "fhunleth/nerves_init_gadget"}
+      {:nerves_runtime, "~> 0.5"},
+      {:nerves_init_gadget, "~> 0.2"}
     ]
   end
 
-  def system("infinity_rpi0"), do: {:infinity_system_rpi0, ">= 0.0.0", github: "infinity-aps/infinity_system_rpi0", tag: "v0.17.0", runtime: false}
+  def system("infinity_rpi0"), do: {:infinity_system_rpi0, ">= 0.0.0", github: "infinity-aps/infinity_system_rpi0", branch: "rel-v0.18.2", runtime: false}
   def system("rpi"), do: {:nerves_system_rpi, ">= 0.0.0", runtime: false}
   def system("rpi0"), do: {:nerves_system_rpi0, ">= 0.0.0", runtime: false}
   def system("rpi2"), do: {:nerves_system_rpi2, ">= 0.0.0", runtime: false}
@@ -68,5 +68,4 @@ defmodule InfinityAPS.Mixfile do
     ["deps.precompile": ["nerves.precompile", "deps.precompile"],
      "deps.loadpaths":  ["deps.loadpaths", "nerves.loadpaths"]]
   end
-
 end
