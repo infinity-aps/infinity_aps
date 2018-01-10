@@ -3,7 +3,7 @@ defmodule InfinityAPS.UI.ConfigurationController do
   alias InfinityAPS.Configuration.ConfigurationData
   alias InfinityAPS.Configuration.Server
 
-  @types %{pump_serial: :string, subg_rfspy_device: :string,
+  @types %{pump_serial: :string,
           wifi_ssid: :string, wifi_psk: :string,
           nightscout_url: :string, nightscout_token: :string}
   def index(conn, _params) do
