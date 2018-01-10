@@ -27,7 +27,10 @@ defmodule InfinityAPS.Application do
     Logger.info fn() -> "Initializing Network" end
     ssid = Server.get_config(:wifi_ssid)
     psk = Server.get_config(:wifi_psk)
-    Nerves.Network.setup "wlan0", ssid: ssid, psk: psk, key_mgmt: @key_mgmt
+    case psk || "" do
+      "" -> Nerves.Network.setup "wlan0", ssid: ssid, key_mgmt: :"NONE"
+      _ -> Nerves.Network.setup "wlan0", ssid: ssid, psk: psk, key_mgmt: @key_mgmt
+    end
   end
 end
 
