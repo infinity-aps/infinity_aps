@@ -5,10 +5,13 @@ defmodule InfinityAPS.Application do
   alias Pummpcomm.Radio.ChipSupervisor
   alias Phoenix.PubSub.PG2
 
+  @timeout 30_000
+
   def start(_type, _args) do
     unless host_mode() do
       init_network()
     end
+    start_twilight_informant()
 
     opts = [strategy: :one_for_one, name: InfinityAPS.Supervisor]
     Supervisor.start_link(children(), opts)
@@ -18,7 +21,7 @@ defmodule InfinityAPS.Application do
     children = [
       InfinityAPS.PummpcommSupervisor.child_spec([]),
       InfinityAPS.Monitor.Loop.child_spec([]),
-      Supervisor.child_spec(PG2, start: {PG2, :start_link, [Nerves.PubSub, [poolsize: 1]]})
+      Supervisor.child_spec(PG2, start: {PG2, :start_link, [Nerves.PubSub, [poolsize: 1]]}),
     ]
 
     case host_mode() do
@@ -31,6 +34,14 @@ defmodule InfinityAPS.Application do
 
   defp host_mode do
     Application.get_env(:infinity_aps, :host_mode)
+  end
+
+  defp start_twilight_informant do
+    Application.put_env(:twilight_informant, :ns_url, Server.get_config(:nightscout_url))
+    Application.put_env(:twilight_informant, :api_secret, Server.get_config(:nightscout_token))
+    Application.put_env(:twilight_informant, :httpoison_opts, timeout: @timeout, recv_timeout: @timeout)
+
+    TwilightInformant.Configuration.start(nil, nil)
   end
 
   @key_mgmt :"WPA-PSK"

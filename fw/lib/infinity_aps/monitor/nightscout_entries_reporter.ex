@@ -1,6 +1,5 @@
 defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
   require Logger
-  alias InfinityAPS.Configuration.Server
   alias InfinityAPS.Glucose.Source
   alias Pummpcomm.Monitor.BloodGlucoseMonitor
 
@@ -32,19 +31,15 @@ defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
     response = entries
     |> Enum.filter(&filter_sgv/1)
     |> Enum.map(fn(entry) -> map_sgv(entry, local_timezone) end)
-    |> TwilightInformant.Entry.post(entries_url())
+    |> TwilightInformant.post_entries()
 
     case response do
-      {:ok, %{status_code: 200}} ->
+      {:ok, _} ->
         Logger.info "Finished posting successfully"
       error ->
         Logger.error fn() -> "Could not post entries: #{inspect error}" end
     end
     response
-  end
-
-  defp entries_url do
-    "#{Server.get_config(:nightscout_url)}/api/v1/entries.json?token=#{Server.get_config(:nightscout_token)}"
   end
 
   defp filter_sgv({:sensor_glucose_value, _}), do: true

@@ -35,7 +35,7 @@ defmodule InfinityAPS.Mixfile do
   def deps do
     [{:nerves, "~> 0.7", runtime: false},
      {:pummpcomm, github: "infinity-aps/pummpcomm"},
-     {:twilight_informant, github: "infinity-aps/twilight_informant"},
+     {:twilight_informant, github: "infinity-aps/twilight_informant", branch: "infinity_aps_integration"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
      {:cfg, path: "../cfg"},

@@ -46,6 +46,6 @@
   "subg_rfspy": {:hex, :subg_rfspy, "2.0.0", "404cabf89eeb139cd6f43ce0ff597d20832393933aa492ca2b1ff73c846ab816", [:mix], [{:csv, "~> 2.0.0", [hex: :csv, repo: "hexpm", optional: false]}, {:elixir_ale, "~> 1.0.1", [hex: :elixir_ale, repo: "hexpm", optional: false]}, {:nerves_uart, "~> 0.1.1", [hex: :nerves_uart, repo: "hexpm", optional: false]}], "hexpm"},
   "system_registry": {:hex, :system_registry, "0.6.0", "31642177e6002d3cff2ada3553ed4e9c0a6ca015797d62d7d17c0ab8696185fc", [:mix], [], "hexpm"},
   "timex": {:hex, :timex, "3.1.24", "d198ae9783ac807721cca0c5535384ebdf99da4976be8cefb9665a9262a1e9e3", [:mix], [{:combine, "~> 0.7", [hex: :combine, repo: "hexpm", optional: false]}, {:gettext, "~> 0.10", [hex: :gettext, repo: "hexpm", optional: false]}, {:tzdata, "~> 0.1.8 or ~> 0.5", [hex: :tzdata, repo: "hexpm", optional: false]}], "hexpm"},
-  "twilight_informant": {:git, "https://github.com/infinity-aps/twilight_informant.git", "8ef5d43816056dd6a50f219c40db9538fbb5ff98", []},
+  "twilight_informant": {:git, "https://github.com/infinity-aps/twilight_informant.git", "efe42d7ad86e5284cd182d9fc1112e0e8e7a5096", [branch: "infinity_aps_integration"]},
   "tzdata": {:hex, :tzdata, "0.5.15", "d49241b0ca52c0b7354cb28ab87d290c30270194a436f9dc649bdc56ba97ceb7", [:mix], [{:hackney, "~> 1.0", [hex: :hackney, repo: "hexpm", optional: false]}], "hexpm"},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.3.1", "a1f612a7b512638634a603c8f401892afbf99b8ce93a45041f8aaca99cadb85e", [:rebar3], [], "hexpm"}}
