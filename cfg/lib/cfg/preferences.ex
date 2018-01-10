@@ -1,5 +1,5 @@
 defmodule InfinityAPS.Configuration.Preferences do
-  defstruct max_iob: 0,
+  defstruct max_iob: 3,
     max_daily_safety_multiplier: 3,
     current_basal_safety_multiplier: 4,
     autosens_max: 1.2,
