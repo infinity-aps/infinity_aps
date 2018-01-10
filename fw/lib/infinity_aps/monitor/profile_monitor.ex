@@ -11,6 +11,7 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
          {:ok, carb_ratios}           <- Pump.read_carb_ratios(),
          {:ok, insulin_sensitivities} <- Pump.read_insulin_sensitivities(),
          {:ok, temp_basal}            <- Pump.read_temp_basal(),
+         {:ok, basal_profile}         <- Pump.read_std_basal_profile(),
          {:ok, model_number}          <- Pump.get_model_number(),
          %{preferences: preferences}  <- Server.get_config() do
 
@@ -21,6 +22,7 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
         carb_ratios: carb_ratios,
         insulin_sensitivities: insulin_sensitivities,
         temp_basal: temp_basal,
+        basal_profile: basal_profile,
         model_number: model_number
       )
       Logger.info fn() -> inspect(profile) end
@@ -33,7 +35,7 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
   defp format_profile(
     bg_targets: bg_targets, preferences: preferences, settings: settings,
     carb_ratios: carb_ratios, insulin_sensitivities: insulin_sensitivities,
-    temp_basal: temp_basal, model_number: model_number) do
+    temp_basal: temp_basal, basal_profile: basal_profile, model_number: model_number) do
 
     %{
       max_iob: preferences.max_iob,
@@ -46,7 +48,8 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
       min_bg: 80,
       max_bg: 120,
       sens: 30,
-      bg_targets: format_bg_targets(bg_targets)
+      bg_targets: format_bg_targets(bg_targets),
+      basalprofile: basal_profile.schedule
     }
   end
 
