@@ -10,7 +10,7 @@ config :infinity_aps,
   host_mode: false
 
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
-config :pummpcomm, :cgm, Pummpcomm.Session.PumpFake
+config :pummpcomm, :cgm, Pummpcomm.Session.Pump
 
 config :pummpcomm, :autodetect_chips, [
   %{__struct__: RFM69.Device, name: :ecc1_phat, device: "spidev0.0", reset_pin: 24, interrupt_pin: 23},
