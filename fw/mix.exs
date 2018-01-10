@@ -63,10 +63,11 @@ defmodule InfinityAPS.Mixfile do
   def system("qemu_arm"), do: {:nerves_system_qemu_arm, ">= 0.0.0", runtime: false}
   def system(target), do: Mix.raise "Unknown MIX_TARGET: #{target}"
 
-  defp aliases, do: aliases(@target) ++ ["compile": "compile --warnings-as-errors"]
+  defp aliases, do: aliases(@target)
   def aliases("host"), do: []
   def aliases(_target) do
     ["deps.precompile": ["nerves.precompile", "deps.precompile"],
-     "deps.loadpaths":  ["deps.loadpaths", "nerves.loadpaths"]]
+     "deps.loadpaths":  ["deps.loadpaths", "nerves.loadpaths"],
+     "compile": "compile --warnings-as-errors"]
   end
 end
