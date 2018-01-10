@@ -33,8 +33,8 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
   end
 
   defp format_profile(
-    bg_targets: bg_targets, preferences: preferences, settings: settings,
-    carb_ratios: carb_ratios, insulin_sensitivities: insulin_sensitivities,
+    bg_targets: bg_targets, preferences: preferences, settings: _settings,
+    carb_ratios: _carb_ratios, insulin_sensitivities: _insulin_sensitivities,
     temp_basal: temp_basal, basal_profile: basal_profile, model_number: model_number) do
 
     %{

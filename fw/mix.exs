@@ -20,7 +20,7 @@ defmodule InfinityAPS.Mixfile do
      lockfile: "mix.lock.#{@target}",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     aliases: aliases(@target),
+     aliases: aliases(),
      deps: deps()]
   end
 
@@ -63,6 +63,7 @@ defmodule InfinityAPS.Mixfile do
   def system("qemu_arm"), do: {:nerves_system_qemu_arm, ">= 0.0.0", runtime: false}
   def system(target), do: Mix.raise "Unknown MIX_TARGET: #{target}"
 
+  defp aliases, do: aliases(@target) ++ ["compile": "compile --warnings-as-errors"]
   def aliases("host"), do: []
   def aliases(_target) do
     ["deps.precompile": ["nerves.precompile", "deps.precompile"],

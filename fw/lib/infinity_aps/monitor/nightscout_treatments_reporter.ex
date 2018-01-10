@@ -87,7 +87,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
   end
 
   defp map_history({:temp_basal_group, %{temp_basal_duration: temp_basal_duration, temp_basal: temp_basal}}, local_timezone) do
-    %{rate: rate, rate_type: rate_type, timestamp: timestamp} = temp_basal
+    %{rate: rate, rate_type: rate_type, timestamp: _timestamp} = temp_basal
     %{duration: duration, timestamp: timestamp} = temp_basal_duration
     %{eventType: "Temp Basal",
       created_at: formatted_time(timestamp, local_timezone),
