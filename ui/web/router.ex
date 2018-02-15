@@ -21,5 +21,7 @@ defmodule InfinityAPS.UI.Router do
 
     post "/preferences", PreferencesController, :update
     get "/preferences", PreferencesController, :index
+
+    get "/", IndexController, :index
   end
 end
