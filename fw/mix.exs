@@ -1,4 +1,4 @@
-defmodule InfinityAPS.Mixfile do
+defmodule Fw.Mixfile do
   use Mix.Project
 
   @target System.get_env("MIX_TARGET") || "host"
@@ -10,7 +10,7 @@ defmodule InfinityAPS.Mixfile do
   """, :reset])
 
   def project do
-    [app: :infinity_aps,
+    [app: :fw,
      version: "0.1.0",
      elixir: "~> 1.5",
      target: @target,
@@ -27,18 +27,17 @@ defmodule InfinityAPS.Mixfile do
   def application, do: application(@target)
 
   def application(target) do
-    [mod: {InfinityAPS.Application, []},
+    [mod: {Fw.Application, []},
      env: [target: target],
      extra_applications: [:logger]]
   end
 
   def deps do
     [{:nerves, "~> 0.7", runtime: false},
-     {:pummpcomm, github: "infinity-aps/pummpcomm"},
-     {:twilight_informant, github: "infinity-aps/twilight_informant", branch: "infinity_aps_integration"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
      {:cfg, path: "../cfg"},
+     {:aps, path: "../aps"},
      {:ui, path: "../ui"}] ++
     deps(@target)
   end

@@ -39,7 +39,8 @@ defmodule InfinityAPS.UI.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:cfg, path: "../cfg"}
+      {:cfg, path: "../cfg"},
+      {:aps, path: "../aps"}
     ]
   end
 end
