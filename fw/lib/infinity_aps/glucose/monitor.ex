@@ -1,15 +1,18 @@
-defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
+defmodule InfinityAPS.Glucose.Monitor do
   require Logger
+  # alias InfinityAPS.Configuration.Server
   alias InfinityAPS.Glucose.Source
-  alias Pummpcomm.Monitor.BloodGlucoseMonitor
+  # alias Pummpcomm.Monitor.BloodGlucoseMonitor
+  alias InfinityAPS.TwilightInformant
 
   @minutes_back 1440
   def loop(local_timezone) do
-    source = %BloodGlucoseMonitor{cgm: Application.get_env(:pummpcomm, :cgm)}
-    case Source.get_sensor_values(source, @minutes_back, local_timezone) do
+    # source = %BloodGlucoseMonitor{cgm: Application.get_env(:pummpcomm, :cgm)}
+    # source = %TwilightInformant{ns_url: Server.get_config(:nightscout_url), api_secret: Server.get_config(:nightscout_token)}
+    case Source.get_sensor_values(%TwilightInformant{}, @minutes_back, local_timezone) do
       {:ok, entries} ->
         write_oref0(entries, local_timezone)
-        report_sgvs(entries, local_timezone)
+        # report_sgvs(entries, local_timezone)
       response       -> Logger.warn "Got: #{inspect(response)}"
     end
   end
@@ -24,22 +27,6 @@ defmodule InfinityAPS.Monitor.NightscoutEntriesReporter do
     |> Poison.encode!()
 
     File.write!("#{loop_dir}/cgm.json", encoded, [:binary])
-  end
-
-  def report_sgvs(entries, local_timezone) do
-    Logger.debug "Posting entries"
-    response = entries
-    |> Enum.filter(&filter_sgv/1)
-    |> Enum.map(fn(entry) -> map_sgv(entry, local_timezone) end)
-    |> TwilightInformant.post_entries()
-
-    case response do
-      {:ok, _} ->
-        Logger.info "Finished posting successfully"
-      error ->
-        Logger.error fn() -> "Could not post entries: #{inspect error}" end
-    end
-    response
   end
 
   defp filter_sgv({:sensor_glucose_value, _}), do: true

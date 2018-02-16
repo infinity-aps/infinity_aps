@@ -20,7 +20,7 @@ defmodule InfinityAPS.Mixfile do
      lockfile: "mix.lock.#{@target}",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     aliases: aliases(@target),
+     aliases: aliases(),
      deps: deps()]
   end
 
@@ -35,7 +35,7 @@ defmodule InfinityAPS.Mixfile do
   def deps do
     [{:nerves, "~> 0.7", runtime: false},
      {:pummpcomm, github: "infinity-aps/pummpcomm"},
-     {:twilight_informant, github: "infinity-aps/twilight_informant"},
+     {:twilight_informant, github: "infinity-aps/twilight_informant", branch: "infinity_aps_integration"},
      {:poison, "~> 3.1"},
      {:timex, "~> 3.0"},
      {:cfg, path: "../cfg"},
@@ -63,9 +63,11 @@ defmodule InfinityAPS.Mixfile do
   def system("qemu_arm"), do: {:nerves_system_qemu_arm, ">= 0.0.0", runtime: false}
   def system(target), do: Mix.raise "Unknown MIX_TARGET: #{target}"
 
+  defp aliases, do: aliases(@target)
   def aliases("host"), do: []
   def aliases(_target) do
     ["deps.precompile": ["nerves.precompile", "deps.precompile"],
-     "deps.loadpaths":  ["deps.loadpaths", "nerves.loadpaths"]]
+     "deps.loadpaths":  ["deps.loadpaths", "nerves.loadpaths"],
+     "compile": "compile --warnings-as-errors"]
   end
 end

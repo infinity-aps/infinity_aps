@@ -3,23 +3,45 @@ defmodule InfinityAPS.Application do
   require Logger
   alias InfinityAPS.Configuration.Server
   alias Pummpcomm.Radio.ChipSupervisor
+  alias Phoenix.PubSub.PG2
+
+  @timeout 30_000
 
   def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-
-    children = [
-      ChipSupervisor.child_spec([]),
-      supervisor(InfinityAPS.PummpcommSupervisor, []),
-      worker(InfinityAPS.Monitor.Loop, []),
-      supervisor(Phoenix.PubSub.PG2, [Nerves.PubSub, [poolsize: 1]])
-    ]
-
-    if !Application.get_env(:infinity_aps, :host_mode) do
+    unless host_mode() do
       init_network()
     end
+    start_twilight_informant()
 
     opts = [strategy: :one_for_one, name: InfinityAPS.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(children(), opts)
+  end
+
+  defp children do
+    children = [
+      InfinityAPS.PummpcommSupervisor.child_spec([]),
+      InfinityAPS.Monitor.Loop.child_spec([]),
+      Supervisor.child_spec(PG2, start: {PG2, :start_link, [Nerves.PubSub, [poolsize: 1]]}),
+    ]
+
+    case host_mode() do
+      true ->
+        children
+      false ->
+        children ++ [ChipSupervisor.child_spec([])]
+    end
+  end
+
+  defp host_mode do
+    Application.get_env(:infinity_aps, :host_mode)
+  end
+
+  defp start_twilight_informant do
+    Application.put_env(:twilight_informant, :ns_url, Server.get_config(:nightscout_url))
+    Application.put_env(:twilight_informant, :api_secret, Server.get_config(:nightscout_token))
+    Application.put_env(:twilight_informant, :httpoison_opts, timeout: @timeout, recv_timeout: @timeout)
+
+    TwilightInformant.Configuration.start(nil, nil)
   end
 
   @key_mgmt :"WPA-PSK"
@@ -38,8 +60,8 @@ defmodule InfinityAPS.PummpcommSupervisor do
   use Supervisor
   alias InfinityAPS.Configuration.Server
 
-  def start_link() do
-    result = {:ok, sup} = Supervisor.start_link(__MODULE__, [])
+  def start_link(arg) do
+    result = {:ok, sup} = Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
     start_workers(sup)
     result
   end

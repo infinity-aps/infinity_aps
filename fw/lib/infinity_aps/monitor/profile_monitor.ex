@@ -3,14 +3,13 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
   alias InfinityAPS.Configuration.Server
   alias Pummpcomm.Session.Pump
 
-  def loop do
+  def loop(local_timezone) do
     Logger.debug "Reading profile information"
 
     with {:ok, bg_targets}            <- Pump.read_bg_targets(),
          {:ok, settings}              <- Pump.read_settings(),
          {:ok, carb_ratios}           <- Pump.read_carb_ratios(),
          {:ok, insulin_sensitivities} <- Pump.read_insulin_sensitivities(),
-         {:ok, temp_basal}            <- Pump.read_temp_basal(),
          {:ok, basal_profile}         <- Pump.read_std_basal_profile(),
          {:ok, model_number}          <- Pump.get_model_number(),
          %{preferences: preferences}  <- Server.get_config() do
@@ -21,9 +20,9 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
         settings: settings,
         carb_ratios: carb_ratios,
         insulin_sensitivities: insulin_sensitivities,
-        temp_basal: temp_basal,
         basal_profile: basal_profile,
-        model_number: model_number
+        model_number: model_number,
+        local_timezone: local_timezone
       )
       Logger.info fn() -> inspect(profile) end
       write_profile(profile)
@@ -33,9 +32,10 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
   end
 
   defp format_profile(
-    bg_targets: bg_targets, preferences: preferences, settings: settings,
-    carb_ratios: carb_ratios, insulin_sensitivities: insulin_sensitivities,
-    temp_basal: temp_basal, basal_profile: basal_profile, model_number: model_number) do
+    bg_targets: bg_targets, preferences: preferences, settings: _settings,
+    carb_ratios: _carb_ratios, insulin_sensitivities: _insulin_sensitivities,
+    basal_profile: basal_profile, model_number: model_number,
+    local_timezone: local_timezone) do
 
     %{
       max_iob: preferences.max_iob,
@@ -44,12 +44,12 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
       carbratio_adjustmentratio: 1,
       dia: 4,
       model: Integer.to_string(model_number),
-      current_basal: temp_basal.units_per_hour,
+      current_basal: current_basal(basal_profile.schedule, DateTime.to_time(Timex.now(local_timezone))),
       min_bg: 80,
       max_bg: 120,
       sens: 30,
       bg_targets: format_bg_targets(bg_targets),
-      basalprofile: basal_profile.schedule
+      basalprofile: format_basal_profile(basal_profile)
     }
   end
 
@@ -65,6 +65,25 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
         }
       end)
     }
+  end
+
+  def current_basal(basal_schedule, current_time) do
+    Enum.reduce_while(basal_schedule, nil, fn(schedule_entry, rate) ->
+      case Timex.before?(current_time, schedule_entry.start) do
+        true -> {:halt, rate}
+        false -> {:cont, schedule_entry.rate}
+      end
+    end)
+  end
+
+  defp format_basal_profile(basal_profile) do
+    basal_profile.schedule
+    |> Enum.map(fn(item) ->
+      %{
+        start: Time.to_string(item.start),
+        rate: item.rate
+      }
+    end)
   end
 
   defp write_profile(profile) do

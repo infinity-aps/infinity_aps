@@ -1,8 +1,6 @@
 defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
   require Logger
-  alias InfinityAPS.Configuration.Server
 
-  # @treatments_url "#{Application.get_env(:nightscout, :url)}/api/v1/treatments.json?token=#{Application.get_env(:nightscout, :token)}"
   def loop(local_timezone) do
     history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(4800, local_timezone)
     with {:ok, entries} <- history_response do
@@ -16,11 +14,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
     |> Enum.reduce([], &group_history/2)
     |> Enum.reverse
     |> Enum.map(fn(entry) -> map_history(entry, local_timezone) end)
-    |> TwilightInformant.Treatment.post(treatments_url())
-  end
-
-  defp treatments_url do
-    "#{Server.get_config(:nightscout_url)}/api/v1/treatments.json?token=#{Server.get_config(:nightscout_token)}"
+    |> TwilightInformant.post_treatments()
   end
 
   # , :basal_profile_start
@@ -87,7 +81,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
   end
 
   defp map_history({:temp_basal_group, %{temp_basal_duration: temp_basal_duration, temp_basal: temp_basal}}, local_timezone) do
-    %{rate: rate, rate_type: rate_type, timestamp: timestamp} = temp_basal
+    %{rate: rate, rate_type: rate_type, timestamp: _timestamp} = temp_basal
     %{duration: duration, timestamp: timestamp} = temp_basal_duration
     %{eventType: "Temp Basal",
       created_at: formatted_time(timestamp, local_timezone),

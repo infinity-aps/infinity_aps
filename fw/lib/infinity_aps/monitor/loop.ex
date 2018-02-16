@@ -4,13 +4,13 @@ defmodule InfinityAPS.Monitor.Loop do
 
   alias InfinityAPS.Configuration.Server
 
-  def start_link do
-    GenServer.start_link(__MODULE__, %{})
+  def start_link(arg) do
+    GenServer.start_link(__MODULE__, arg)
   end
 
-  def init(state) do
+  def init(_) do
     schedule_work(5_000)
-    {:ok, state}
+    {:ok, %{}}
   end
 
   @way_back_when ~N[1980-01-01 00:00:00]
@@ -20,12 +20,12 @@ defmodule InfinityAPS.Monitor.Loop do
     case set_system_time_from_pump(Timex.before?(Timex.now, @way_back_when)) do
       {:ok} ->
         InfinityAPS.Monitor.NightscoutEntriesReporter.loop(local_timezone())
-        # InfinityAPS.Monitor.PumpHistoryMonitor.loop(local_timezone())
-        # InfinityAPS.Monitor.CurrentBasalMonitor.loop()
-        # InfinityAPS.Monitor.ProfileMonitor.loop()
-        # InfinityAPS.Monitor.IOBMonitor.loop(local_timezone())
-        # InfinityAPS.Monitor.DetermineBasal.loop()
-        # InfinityAPS.Monitor.EnactTempBasal.loop()
+        InfinityAPS.Monitor.PumpHistoryMonitor.loop(local_timezone())
+        InfinityAPS.Monitor.CurrentBasalMonitor.loop()
+        InfinityAPS.Monitor.ProfileMonitor.loop(local_timezone())
+        InfinityAPS.Monitor.IOBMonitor.loop(local_timezone())
+        InfinityAPS.Monitor.DetermineBasal.loop()
+        InfinityAPS.Monitor.EnactTempBasal.loop()
         InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop(local_timezone())
         schedule_work()
       {:error, error} ->
