@@ -6,7 +6,7 @@ exports.config = {
     stylesheets: {
       joinTo: "css/app.css",
       order: {
-        after: ["css/app.scss"] // concat app.css last
+        after: ["css/app.scss"]
       }
     },
     templates: {
@@ -25,7 +25,8 @@ exports.config = {
 
   plugins: {
     babel: {
-      ignore: [/vendor/]
+      ignore: [/vendor/],
+      presets: ['env', 'react']
     }
   },
 

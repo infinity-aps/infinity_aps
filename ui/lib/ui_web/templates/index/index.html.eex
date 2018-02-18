@@ -1,91 +1,11 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script> -->
 
 <h2>Infinity APS</h2>
 
 <div class="container-fluid">
   <div class="row">
-    <canvas id="myChart" width="800" height="400"></canvas>
-    <script>
-     var ctx = document.getElementById("myChart").getContext('2d');
-
-     var myChart = new Chart(ctx, {
-       type: 'line',
-       data: {
-         datasets: [{
-           label: "Sensor Glucose Values",
-           fill: false,
-           data: [{
-             y: 250,
-             x: "2018-02-12T13:04:00Z",
-           }, {
-             y: 158,
-             x: "2018-02-12T12:59:00Z",
-           }, {
-             y: 108,
-             x: "2018-02-12T12:54:00Z",
-           }, {
-             y: 136,
-             x: "2018-02-12T12:49:00Z",
-           }, {
-             y: 130,
-             x: "2018-02-12T12:44:00Z",
-           }, {
-             y: 120,
-             x: "2018-02-12T12:39:00Z",
-           }, {
-             y: 112,
-             x: "2018-02-12T12:34:00Z",
-           }, {
-             y: 104,
-             x: "2018-02-12T12:29:00Z",
-           }, {
-             y: 150,
-             x: "2018-02-12T12:24:00Z",
-           }, {
-             y: 96,
-             x: "2018-02-12T12:19:00Z"
-           }]
-				 }],
-       },
-       options: {
-         scales: {
-           xAxes: [{
-             type: 'time',
-             /* time: {*/
-             /* unit: 'minute',*/
-             /* unitStepSize: 5,*/
-             /* displayFormats: {*/
-             /* 'minute': 'hh:mm:ss'*/
-             /* }*/
-             /* },*/
-             display: true
-           }],
-           yAxes: [{
-             type: 'logarithmic',
-             display: true,
-             ticks: {
-               min: 30,
-               max: 450,
-               callback: function(value, index, values) {
-                 return Number(value.toString());
-               }
-             },
-             afterBuildTicks: function(pckBarChart) {
-               pckBarChart.ticks = [];
-               pckBarChart.ticks.push(40);
-               pckBarChart.ticks.push(55);
-               pckBarChart.ticks.push(70);
-               pckBarChart.ticks.push(120);
-               pckBarChart.ticks.push(145);
-               pckBarChart.ticks.push(180);
-               pckBarChart.ticks.push(400);
-             }
-           }]
-         }
-       }
-     });
-    </script>
+    <div id="glucose-react"></div>
   </div>
 </div>
