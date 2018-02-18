@@ -1,0 +1,12 @@
+{
+  "name": "assets",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "brunch": "^2.10.12",
+    "react-chartjs": "^1.2.0",
+    "sass-brunch": "^2.10.4"
+  }
+}
