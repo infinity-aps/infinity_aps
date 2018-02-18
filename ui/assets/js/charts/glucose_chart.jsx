@@ -3,14 +3,27 @@ import React, {Component} from 'react';
 export default class GlucoseChart extends Component {
   render() {
     return (
-      <canvas id="glucoseChart" width="1500" height="800"></canvas>
+      <canvas id="glucoseChart" width="1000" height="500"></canvas>
     )
   }
 
   componentDidMount() {
     var ctx = document.getElementById("glucoseChart").getContext('2d');
+    this.setState({ glucoseChart: this.initializeGlucoseChart(ctx) });
+  }
 
-    var glucoseChart = new Chart(ctx, {
+  updateGlucoseData(sgvs) {
+    let chartValues = sgvs.map((sgv) => {
+      return {y: sgv.sgv, x: sgv.dateString};
+    });
+    console.log("Updating sgvs", this.state.glucoseChart.data.datasets[1]);
+    this.state.glucoseChart.data.datasets[1].data = chartValues;
+    this.state.glucoseChart.update();
+  }
+
+  initializeGlucoseChart(ctx) {
+    Chart.defaults.global.elements.point.radius = 2;
+    return new Chart(ctx, {
       type: 'line',
       responsive: true,
       data: {
@@ -19,85 +32,39 @@ export default class GlucoseChart extends Component {
           label: "Basal Rate",
           yAxisID: 'basal',
           fill: true,
-          data: [{
-            y: 0.8,
-            x: "2018-02-12T13:04:00Z",
-          }, {
-            y: 1.3,
-            x: "2018-02-12T12:57:00Z",
-          }, {
-            y: 3.0,
-            x: "2018-02-12T12:53:00Z",
-          }, {
-            y: 5.0,
-            x: "2018-02-12T12:46:00Z",
-          }, {
-            y: 4.0,
-            x: "2018-02-12T12:42:00Z",
-          }, {
-            y: 3.5,
-            x: "2018-02-12T12:39:00Z",
-          }, {
-            y: 3.2,
-            x: "2018-02-12T12:30:00Z",
-          }, {
-            y: 1.0,
-            x: "2018-02-12T12:29:00Z",
-          }, {
-            y: 0,
-            x: "2018-02-12T12:21:00Z",
-          }, {
-            y: 0.5,
-            x: "2018-02-12T12:19:00Z"
-          }]
+          data: [
+            {y: 0.8, x: "2018-02-18T13:04:00Z",},
+            {y: 1.3, x: "2018-02-18T12:57:00Z",},
+            {y: 3.0, x: "2018-02-18T12:53:00Z",},
+            {y: 5.0, x: "2018-02-18T12:46:00Z",},
+            {y: 4.0, x: "2018-02-18T12:42:00Z",},
+            {y: 3.5, x: "2018-02-18T12:39:00Z",},
+            {y: 3.2, x: "2018-02-18T12:30:00Z",},
+            {y: 1.0, x: "2018-02-18T12:29:00Z",},
+            {y: 0, x: "2018-02-18T12:21:00Z",},
+            {y: 0.5, x: "2018-02-18T12:19:00Z"}
+          ]
         },{
           label: "Sensor Glucose Values",
           yAxisID: 'glucose',
           fill: false,
+          showLine: false,
           borderColor: "#3cba9f",
-          data: [{
-            y: 250,
-            x: "2018-02-12T13:04:00Z",
-          }, {
-            y: 158,
-            x: "2018-02-12T12:59:00Z",
-          }, {
-            y: 108,
-            x: "2018-02-12T12:54:00Z",
-          }, {
-            y: 136,
-            x: "2018-02-12T12:49:00Z",
-          }, {
-            y: 130,
-            x: "2018-02-12T12:44:00Z",
-          }, {
-            y: 120,
-            x: "2018-02-12T12:39:00Z",
-          }, {
-            y: 112,
-            x: "2018-02-12T12:34:00Z",
-          }, {
-            y: 104,
-            x: "2018-02-12T12:29:00Z",
-          }, {
-            y: 150,
-            x: "2018-02-12T12:24:00Z",
-          }, {
-            y: 96,
-            x: "2018-02-12T12:19:00Z"
-          }]
+          backgroundColor: "#3cba9f"
         }],
       },
       options: {
         scales: {
           xAxes: [{
             type: 'time',
-            display: true
+            display: true,
+            gridLines: { display: false }
           }],
           yAxes: [{
             id: 'glucose',
             type: 'logarithmic',
             display: true,
+            gridLines: { borderDash: [5, 15] },
             ticks: {
               min: 30,
               max: 450,
@@ -118,11 +85,12 @@ export default class GlucoseChart extends Component {
           },{
             id: 'basal',
             display: true,
+            gridLines: { drawOnChartArea: false },
             label: 'Basal Units',
             position: 'right',
             ticks: {
               min: 0,
-              max: 13,
+              max: 40,
             },
             afterBuildTicks: function(pckBarChart) {
               pckBarChart.ticks = [];

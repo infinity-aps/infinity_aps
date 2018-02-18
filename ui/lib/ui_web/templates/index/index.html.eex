@@ -1,11 +1,7 @@
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script> -->
-
 <h2>Infinity APS</h2>
 
-<div class="container-fluid">
+<div class="container">
   <div class="row">
-    <div id="glucose-react"></div>
+    <div id="glucose-react" class="chart"></div>
   </div>
 </div>

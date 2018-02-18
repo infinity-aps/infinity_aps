@@ -27,12 +27,29 @@ exports.config = {
     babel: {
       ignore: [/vendor/],
       presets: ['env', 'react']
+    },
+    copycat: {
+      "fonts": ["node_modules/bootstrap-sass/assets/fonts/bootstrap"]
+    },
+    sass: {
+      options: {
+        includePaths: ["node_modules/bootstrap-sass/assets/stylesheets"],
+        precision: 8
+      }
     }
   },
 
   modules: {
     autoRequire: {
       "js/app.js": ["js/app"]
+    }
+  },
+
+  npm: {
+    globals: {
+      $: "jquery",
+      jQuery: "jquery",
+      bootstrap: 'bootstrap-sass'
     }
   }
 };
