@@ -24,7 +24,7 @@ config :nerves_network,
 
 config :bootloader,
   init: [:nerves_runtime, :nerves_init_gadget],
-  app: :infinity_aps
+  app: :fw
 
 config :ui, InfinityAPS.UI.Endpoint,
   http: [port: 80],
