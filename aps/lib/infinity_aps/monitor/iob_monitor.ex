@@ -4,13 +4,17 @@ defmodule InfinityAPS.Monitor.IOBMonitor do
   def loop(timezone) do
     Logger.debug "Calculating IOB"
 
-    case Pummpcomm.Session.Pump.read_time() do
+    case pump().read_time() do
       {:ok, time} ->
         write_time(time, timezone)
         calculate_iob()
         |> write_iob()
       response          -> Logger.warn "Got: #{inspect(response)}"
     end
+  end
+
+  defp pump do
+    Application.get_env(:pummpcomm, :pump)
   end
 
   defp calculate_iob do

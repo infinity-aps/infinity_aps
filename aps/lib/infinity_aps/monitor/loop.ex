@@ -43,7 +43,7 @@ defmodule InfinityAPS.Monitor.Loop do
 
   defp set_system_time_from_pump(false), do: {:ok}
   defp set_system_time_from_pump(true) do
-    with {:ok, pump_time} <- Pummpcomm.Session.Pump.read_time(),
+    with {:ok, pump_time} <- pump().read_time(),
          utc_zoned_time <- Timex.to_datetime(pump_time, local_timezone()) |> Timex.Timezone.convert(:utc),
          {:ok, formatted_time} <- Timex.format(utc_zoned_time, "%Y-%m-%d %H:%M:%S", :strftime) do
       Logger.warn "Setting system time from pump to #{formatted_time} (UTC)"
@@ -56,5 +56,9 @@ defmodule InfinityAPS.Monitor.Loop do
 
   defp local_timezone do
     Server.get_config(:timezone) |> Timex.Timezone.get()
+  end
+
+  defp pump do
+    Application.get_env(:pummpcomm, :pump)
   end
 end

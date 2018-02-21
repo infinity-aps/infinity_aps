@@ -1,17 +1,18 @@
 defmodule InfinityAPS.Monitor.ProfileMonitor do
   require Logger
   alias InfinityAPS.Configuration.Server
-  alias Pummpcomm.Session.Pump
 
   def loop(local_timezone) do
     Logger.debug "Reading profile information"
 
-    with {:ok, bg_targets}            <- Pump.read_bg_targets(),
-         {:ok, settings}              <- Pump.read_settings(),
-         {:ok, carb_ratios}           <- Pump.read_carb_ratios(),
-         {:ok, insulin_sensitivities} <- Pump.read_insulin_sensitivities(),
-         {:ok, basal_profile}         <- Pump.read_std_basal_profile(),
-         {:ok, model_number}          <- Pump.get_model_number(),
+    pump = pump()
+
+    with {:ok, bg_targets}            <- pump.read_bg_targets(),
+         {:ok, settings}              <- pump.read_settings(),
+         {:ok, carb_ratios}           <- pump.read_carb_ratios(),
+         {:ok, insulin_sensitivities} <- pump.read_insulin_sensitivities(),
+         {:ok, basal_profile}         <- pump.read_std_basal_profile(),
+         {:ok, model_number}          <- pump.get_model_number(),
          %{preferences: preferences}  <- Server.get_config() do
 
       profile = format_profile(
@@ -29,6 +30,10 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
     else
       error -> Logger.error fn() -> "Error while reading profile information: #{inspect(error)}" end
     end
+  end
+
+  defp pump do
+    Application.get_env(:pummpcomm, :pump)
   end
 
   defp format_profile(

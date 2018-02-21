@@ -1,6 +1,5 @@
 defmodule InfinityAPS.Monitor.EnactTempBasal do
   require Logger
-  alias Pummpcomm.Session.Pump
 
   def loop do
     result = determine_basal()
@@ -20,6 +19,10 @@ defmodule InfinityAPS.Monitor.EnactTempBasal do
 
   defp enact_basal(basal_results) do
     Logger.info fn() -> ~s(Setting temp basal to #{basal_results["rate"]} for #{basal_results["duration"]} minutes) end
-    Pump.set_temp_basal(units_per_hour: basal_results["rate"], duration_minutes: basal_results["duration"], type: :absolute)
+    pump().set_temp_basal(units_per_hour: basal_results["rate"], duration_minutes: basal_results["duration"], type: :absolute)
+  end
+
+  defp pump do
+    Application.get_env(:pummpcomm, :pump)
   end
 end
