@@ -19,7 +19,8 @@ defmodule InfinityAPS.Monitor.IOBMonitor do
 
   defp calculate_iob do
     inputs = ["history.json", "profile.json", "clock.json"]
-    {iob_results, 0} = System.cmd("node", ["/usr/lib/node_modules/oref0/bin/oref0-calculate-iob.js" | inputs], cd: loop_dir())
+    oref0_calculate_iob = "#{Application.get_env(:infinity_aps, :node_modules_directory)}/oref0/bin/oref0-calculate-iob.js"
+    {iob_results, 0} = System.cmd("node", [oref0_calculate_iob | inputs], cd: loop_dir())
     iob_results
   end
 

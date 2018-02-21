@@ -11,7 +11,8 @@ defmodule InfinityAPS.Monitor.DetermineBasal do
 
   defp determine_basal do
     inputs = ["iob.json", "temp_basal.json", "cgm.json", "profile.json"]
-    {basal_results, 0} = System.cmd("node" , ["/usr/lib/node_modules/oref0/bin/oref0-determine-basal.js" | inputs], cd: loop_dir())
+    oref0_determine_basal = "#{Application.get_env(:infinity_aps, :node_modules_directory)}/oref0/bin/oref0-determine-basal.js"
+    {basal_results, 0} = System.cmd("node" , [oref0_determine_basal | inputs], cd: loop_dir())
     basal_results
   end
 

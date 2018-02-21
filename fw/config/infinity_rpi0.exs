@@ -7,6 +7,7 @@ config :cfg, InfinityAPS.Configuration,
 
 config :infinity_aps,
   loop_directory: "/root/loop",
+  node_modules_directory: "/usr/lib/node_modules",
   host_mode: false
 
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
