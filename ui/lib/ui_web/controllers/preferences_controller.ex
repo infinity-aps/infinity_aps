@@ -1,6 +1,5 @@
 defmodule InfinityAPS.UI.PreferencesController do
   use InfinityAPS.UI.Web, :controller
-  alias InfinityAPS.Configuration.ConfigurationData
   alias InfinityAPS.Configuration.Preferences
   alias InfinityAPS.Configuration.Server
 
