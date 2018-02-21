@@ -21,4 +21,21 @@ config :ui, InfinityAPS.UI.Endpoint,
   server: true,
   render_errors: [accepts: ~w(html json)],
   pubsub: [name: InfinityAPS.UI.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+           adapter: Phoenix.PubSub.PG2],
+  debug_errors: true,
+  code_reloader: true,
+  check_origin: false,
+  watchers: [node: ["../../ui/assets/node_modules/brunch/bin/brunch", "watch", "--stdin",
+                    cd: Path.expand("../../ui/assets", __DIR__)]]
+
+
+# Watch static and templates for browser reloading.
+config :ui, InfinityAPS.UI.Endpoint,
+  live_reload: [
+    patterns: [
+      ~r{../../ui/priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+      ~r{../../ui/priv/gettext/.*(po)$},
+      ~r{../../ui/lib/ui_web/views/.*(ex)$},
+      ~r{../../ui/lib/ui_web/templates/.*(eex)$}
+    ]
+  ]
