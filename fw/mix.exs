@@ -42,7 +42,10 @@ defmodule Fw.Mixfile do
     deps(@target)
   end
 
-  def deps("host"), do: []
+  def deps("host") do
+    [{:phoenix_live_reload, "~> 1.1"}]
+  end
+
   def deps(target) do
     [ system(target),
       {:bootloader, "~> 0.1"},
