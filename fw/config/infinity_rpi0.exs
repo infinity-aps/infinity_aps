@@ -33,6 +33,7 @@ config :ui, InfinityAPS.UI.Endpoint,
   root: Path.dirname(__DIR__),
   server: true,
   render_errors: [accepts: ~w(html json)],
+  check_origin: false,
   pubsub: [name: InfinityAPS.UI.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
