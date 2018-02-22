@@ -18,6 +18,7 @@ defmodule InfinityAPS.Application do
     [
       InfinityAPS.PummpcommSupervisor.child_spec([]),
       InfinityAPS.Monitor.Loop.child_spec([]),
+      InfinityAPS.Oref0.LoopStatus.child_spec([])
     ]
     # children ++ [ChipSupervisor.child_spec([])]
   end

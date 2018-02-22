@@ -18,10 +18,23 @@ export default class GlucoseChart extends Component {
     });
     console.log("Updating sgvs", this.state.glucoseChart.data.datasets[1]);
     let glucoseDataset = this.state.glucoseChart.data.datasets.find((dataset) => {
-      if(dataset.yAxisID === 'glucose') { return true; }
+      if(dataset.label === "Sensor Glucose Value") { return true; }
       return false;
     });
     glucoseDataset.data = chartValues;
+    this.state.glucoseChart.update();
+  }
+
+  updatePredictedGlucoseData(predicted) {
+    let chartValues = predicted.map((bg) => {
+      return {y: bg.bg, x: bg.dateString};
+    });
+    /* console.log("Updating sgvs", this.state.glucoseChart.data.datasets[1]);*/
+    let predictedDataset = this.state.glucoseChart.data.datasets.find((dataset) => {
+      if(dataset.label === "Predicted Glucose Value") { return true; }
+      return false;
+    });
+    predictedDataset.data = chartValues;
     this.state.glucoseChart.update();
   }
 
@@ -34,13 +47,21 @@ export default class GlucoseChart extends Component {
         datasets: [{
           label: "Sensor Glucose Value",
           yAxisID: 'glucose',
-          fill: true,
           showLine: false,
           borderColor: "#3cba9f",
           backgroundColor: "#3cba9f"
+        },{
+          label: "Predicted Glucose Value",
+          yAxisID: 'predictedGlucose',
+          showLine: false,
+          borderColor: "purple",
         }],
       },
       options: {
+        hover: {
+          mode: 'nearest'
+        },
+        animation: false,
         scales: {
           xAxes: [{
             type: 'time',
@@ -69,6 +90,11 @@ export default class GlucoseChart extends Component {
               pckBarChart.ticks.push(180);
               pckBarChart.ticks.push(400);
             }
+          },{
+            id: 'predictedGlucose',
+            type: 'logarithmic',
+            display: false,
+            ticks: {min: 30, max: 450}
           }]
         }
       }

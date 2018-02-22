@@ -26,6 +26,7 @@ defmodule InfinityAPS.Monitor.Loop do
         InfinityAPS.Monitor.IOBMonitor.loop(local_timezone())
         InfinityAPS.Monitor.DetermineBasal.loop()
         InfinityAPS.Monitor.EnactTempBasal.loop()
+        InfinityAPS.Oref0.LoopStatus.update_status_from_disk()
         InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop(local_timezone())
         schedule_work()
       {:error, error} ->

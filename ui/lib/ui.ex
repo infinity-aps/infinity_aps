@@ -6,6 +6,7 @@ defmodule InfinityAPS.UI do
 
     children = [
       supervisor(InfinityAPS.UI.Endpoint, []),
+      InfinityAPS.UI.GlucoseBroker.child_spec(nil)
     ]
 
     opts = [strategy: :one_for_one, name: InfinityAPS.UI.Supervisor]

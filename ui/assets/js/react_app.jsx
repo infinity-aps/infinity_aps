@@ -15,6 +15,12 @@ export default class ReactApp extends Component {
       console.log("Got message", msg);
       this.refs.glucoseChart.updateGlucoseData(msg.data);
     });
+
+
+    channel.on("predicted_bgs", msg => {
+      console.log("Got predicted bgs", msg);
+      this.refs.glucoseChart.updatePredictedGlucoseData(msg.data);
+    });
   }
 
   render() {

@@ -5,30 +5,54 @@ defmodule InfinityAPS.UI.LoopStatusChannel do
 
   alias InfinityAPS.Configuration.Server
   alias InfinityAPS.Glucose.Source
-  alias InfinityAPS.TwilightInformant
+  alias InfinityAPS.UI.GlucoseBroker
   alias Pummpcomm.Monitor.BloodGlucoseMonitor
+  alias Pummpcomm.Monitor.HistoryMonitor
 
-  @minutes_back 1440
+  @minutes_back 720
   def join("loop_status:glucose", _message, socket) do
+    send(self(), {:after_join_glucose})
+    {:ok, socket}
+  end
+
+  @minutes_back 720
+  def join("loop_status:basal", _message, socket) do
+    send(self(), {:after_join_basal})
+    {:ok, socket}
+  end
+
+  def handle_info({:after_join_glucose}, socket) do
     source = %BloodGlucoseMonitor{cgm: Application.get_env(:pummpcomm, :cgm)}
-    case Source.get_sensor_values(source, @minutes_back, local_timezone) do
+    case Source.get_sensor_values(source, @minutes_back, local_timezone()) do
       {:ok, entries} ->
         message = map_entries(entries, local_timezone())
-        send(self, {:after_join, message})
+        push socket, "sgvs", %{data: message}
       response       ->
         Logger.warn "Got: #{inspect(response)}"
     end
 
-    {:ok, socket}
+    case GlucoseBroker.get_predicted_bgs() do
+      {:ok, predicted_bgs} -> push socket, "predicted_bgs", %{data: predicted_bgs}
+      response             -> Logger.warn "Got: #{inspect(response)}"
+    end
+
+    {:noreply, socket}
   end
 
-  def handle_info({:after_join, message}, socket) do
-    push socket, "sgvs", %{data: message}
+  def handle_info({:after_join_basal}, socket) do
+    case HistoryMonitor.get_pump_history(@minutes_back, local_timezone()) do
+      {:ok, history} ->
+        # message = map_history(history, local_timezone())
+        message = history
+        push socket, "basal", %{data: message}
+      response       ->
+        Logger.warn "Got: #{inspect(response)}"
+    end
     {:noreply, socket}
   end
 
   defp map_entries(entries, local_timezone) do
-    encoded = entries
+    entries
     |> Enum.filter(&filter_sgv/1)
     |> Enum.map(fn(entry) -> map_sgv(entry, local_timezone) end)
   end
