@@ -2,7 +2,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
   require Logger
 
   def loop(local_timezone) do
-    history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(4800, local_timezone)
+    history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(1440, local_timezone)
     with {:ok, entries} <- history_response do
       report_treatments(entries, local_timezone)
     end
