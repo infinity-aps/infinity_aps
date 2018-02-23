@@ -24,6 +24,9 @@ config :pummpcomm, :autodetect_chips, [
 config :nerves_network,
   regulatory_domain: "US"
 
+config :nerves_init_gadget,
+  address_method: :static
+
 config :shoehorn,
   init: [:nerves_runtime, :nerves_init_gadget],
   app: :fw

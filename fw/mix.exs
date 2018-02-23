@@ -50,7 +50,7 @@ defmodule Fw.Mixfile do
     [ system(target),
       {:shoehorn, "~> 0.2"},
       {:nerves_runtime, "~> 0.5"},
-      {:nerves_init_gadget, "~> 0.2"}
+      {:nerves_init_gadget, github: "nerves-project/nerves_init_gadget", ref: "dhcp"}
     ]
   end
 
