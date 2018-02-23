@@ -29,8 +29,10 @@ defmodule InfinityAPS.Oref0.Entries do
     |> Enum.map(fn(entry) -> map_sgv(entry, local_timezone) end)
 
     File.write!("#{loop_dir}/cgm.json", Poison.encode!(filtered_entries), [:binary])
-    GenServer.cast(:glucose_broker, {:sgvs, filtered_entries})
-    {:reply, {:ok, %{sgvs: filtered_entries}}, %{sgvs: filtered_entries}}
+
+    chronological_entries = Enum.reverse(filtered_entries)
+    GenServer.cast(:glucose_broker, {:sgvs, chronological_entries})
+    {:reply, {:ok, %{sgvs: chronological_entries}}, %{sgvs: chronological_entries}}
   end
 
   defp filter_sgv({:sensor_glucose_value, _}), do: true
