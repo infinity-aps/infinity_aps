@@ -28,7 +28,7 @@ defmodule Fw.Application do
   end
 
   defp host_mode do
-    Application.get_env(:infinity_aps, :host_mode)
+    Application.get_env(:fw, :host_mode)
   end
 
   @key_mgmt :"WPA-PSK"

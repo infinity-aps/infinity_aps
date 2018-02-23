@@ -14,7 +14,7 @@ defmodule InfinityAPS.Monitor.EnactTempBasal do
   end
 
   defp loop_dir do
-    Application.get_env(:infinity_aps, :loop_directory) |> Path.expand()
+    Application.get_env(:aps, :loop_directory) |> Path.expand()
   end
 
   defp enact_basal(basal_results) do

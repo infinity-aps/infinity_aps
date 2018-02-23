@@ -9,7 +9,7 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
   end
 
   def write_history(history, local_timezone) do
-    loop_dir = Application.get_env(:infinity_aps, :loop_directory) |> Path.expand()
+    loop_dir = Application.get_env(:aps, :loop_directory) |> Path.expand()
     File.mkdir_p!(loop_dir)
 
     encoded = history

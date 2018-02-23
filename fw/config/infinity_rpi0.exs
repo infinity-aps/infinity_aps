@@ -2,13 +2,15 @@ use Mix.Config
 
 config :logger, level: :info
 
+config :fw,
+  host_mode: false
+
 config :cfg, InfinityAPS.Configuration,
   file: "/root/infinity_aps.json"
 
-config :infinity_aps,
+config :aps,
   loop_directory: "/root/loop",
-  node_modules_directory: "/usr/lib/node_modules",
-  host_mode: false
+  node_modules_directory: "/usr/lib/node_modules"
 
 config :pummpcomm, :pump, Pummpcomm.Session.Pump
 config :pummpcomm, :cgm, Pummpcomm.Session.Pump
