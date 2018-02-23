@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import moment from 'moment';
 
 export default class GlucoseChart extends Component {
   render() {
@@ -12,29 +13,47 @@ export default class GlucoseChart extends Component {
     this.setState({ glucoseChart: this.initializeGlucoseChart(ctx) });
   }
 
+  mostRecentGlucose() {
+    let glucoseData = this.glucoseDataset().data;
+    return glucoseData[glucoseData.length - 1];
+  }
+
+  glucoseDataset() {
+    return this.state.glucoseChart.data.datasets.find((dataset) => {
+      if(dataset.label === "Sensor Glucose Value") { return true; }
+      return false;
+    });
+  }
+
+  predictedDataset() {
+    return this.state.glucoseChart.data.datasets.find((dataset) => {
+      if(dataset.label === "Predicted Glucose Value") { return true; }
+      return false;
+    });
+  }
+
   updateGlucoseData(sgvs) {
     let chartValues = sgvs.map((sgv) => {
       return {y: sgv.sgv, x: sgv.dateString};
     });
-    console.log("Updating sgvs", this.state.glucoseChart.data.datasets[1]);
-    let glucoseDataset = this.state.glucoseChart.data.datasets.find((dataset) => {
-      if(dataset.label === "Sensor Glucose Value") { return true; }
-      return false;
-    });
-    glucoseDataset.data = chartValues;
-    this.state.glucoseChart.update();
+    this.glucoseDataset().data = chartValues;
+    this.updatePredictedGlucoseData(this.predictedDataset().data);
   }
 
   updatePredictedGlucoseData(predicted) {
+    if(!predicted) { return; }
+    let mostRecentGlucose = this.mostRecentGlucose();
     let chartValues = predicted.map((bg) => {
       return {y: bg.bg, x: bg.dateString};
-    });
-    /* console.log("Updating sgvs", this.state.glucoseChart.data.datasets[1]);*/
-    let predictedDataset = this.state.glucoseChart.data.datasets.find((dataset) => {
-      if(dataset.label === "Predicted Glucose Value") { return true; }
+    }).filter((bg) => {
+      if(!mostRecentGlucose || moment(bg.x).isAfter(mostRecentGlucose)) {
+        return true;
+      }
+      console.log("pruning predicted glucose:", bg);
       return false;
     });
-    predictedDataset.data = chartValues;
+    console.log("Updating predictedGlucose", chartValues);
+    this.predictedDataset().data = chartValues;
     this.state.glucoseChart.update();
   }
 
