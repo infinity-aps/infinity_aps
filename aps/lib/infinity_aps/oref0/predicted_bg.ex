@@ -1,4 +1,6 @@
 defmodule InfinityAPS.Oref0.PredictedBG do
+
+  def apply_timestamp(nil, _), do: nil
   def apply_timestamp(bgs, start_timestamp) do
     bgs
     |> Enum.reduce([], fn(bg, acc) ->
