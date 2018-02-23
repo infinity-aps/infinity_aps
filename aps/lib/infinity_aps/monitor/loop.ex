@@ -15,19 +15,17 @@ defmodule InfinityAPS.Monitor.Loop do
 
   @way_back_when ~N[1980-01-01 00:00:00]
   def handle_info(:loop, state) do
-    # Logger.warn "Checking system time"
-
     case set_system_time_from_pump(Timex.before?(Timex.now, @way_back_when)) do
       {:ok} ->
-        InfinityAPS.Monitor.NightscoutEntriesReporter.loop(local_timezone())
+        InfinityAPS.Monitor.GlucoseMonitor.loop(local_timezone())
         InfinityAPS.Monitor.PumpHistoryMonitor.loop(local_timezone())
         InfinityAPS.Monitor.CurrentBasalMonitor.loop()
         InfinityAPS.Monitor.ProfileMonitor.loop(local_timezone())
         InfinityAPS.Monitor.IOBMonitor.loop(local_timezone())
         InfinityAPS.Monitor.DetermineBasal.loop()
-        InfinityAPS.Monitor.EnactTempBasal.loop()
         InfinityAPS.Oref0.LoopStatus.update_status_from_disk()
-        InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop(local_timezone())
+        InfinityAPS.Monitor.EnactTempBasal.loop()
+        # InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop(local_timezone())
         schedule_work()
       {:error, error} ->
         Logger.error("Unable to set system time: #{inspect(error)}")

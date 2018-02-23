@@ -15,20 +15,15 @@ defmodule InfinityAPS.UI.LoopStatusChannel do
     {:ok, socket}
   end
 
-  @minutes_back 720
   def join("loop_status:basal", _message, socket) do
     send(self(), {:after_join_basal})
     {:ok, socket}
   end
 
   def handle_info({:after_join_glucose}, socket) do
-    source = %BloodGlucoseMonitor{cgm: Application.get_env(:pummpcomm, :cgm)}
-    case Source.get_sensor_values(source, @minutes_back, local_timezone()) do
-      {:ok, entries} ->
-        message = map_entries(entries, local_timezone())
-        push socket, "sgvs", %{data: message}
-      response       ->
-        Logger.warn "Got: #{inspect(response)}"
+    case GlucoseBroker.get_sensor_glucose() do
+      {:ok, svgs} -> push socket, "sgvs", %{data: svgs}
+      response             -> Logger.warn "Got: #{inspect(response)}"
     end
 
     case GlucoseBroker.get_predicted_bgs() do
