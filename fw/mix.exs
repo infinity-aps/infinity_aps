@@ -14,7 +14,7 @@ defmodule Fw.Mixfile do
      version: "0.1.0",
      elixir: "~> 1.5",
      target: @target,
-     archives: [nerves_bootstrap: "~> 0.6.1"],
+     archives: [nerves_bootstrap: "~> 0.8.1"],
      deps_path: "deps/#{@target}",
      build_path: "_build/#{@target}",
      lockfile: "mix.lock.#{@target}",
@@ -48,7 +48,7 @@ defmodule Fw.Mixfile do
 
   def deps(target) do
     [ system(target),
-      {:bootloader, "~> 0.1"},
+      {:shoehorn, "~> 0.2"},
       {:nerves_runtime, "~> 0.5"},
       {:nerves_init_gadget, "~> 0.2"}
     ]
@@ -68,8 +68,7 @@ defmodule Fw.Mixfile do
   defp aliases, do: aliases(@target)
   def aliases("host"), do: []
   def aliases(_target) do
-    ["deps.precompile": ["nerves.precompile", "deps.precompile"],
-     "deps.loadpaths":  ["deps.loadpaths", "nerves.loadpaths"],
-     "compile": "compile --warnings-as-errors"]
+     ["compile": "compile --warnings-as-errors"]
+     |> Nerves.Bootstrap.add_aliases()
   end
 end

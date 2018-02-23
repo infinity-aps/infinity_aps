@@ -24,7 +24,7 @@ config :pummpcomm, :autodetect_chips, [
 config :nerves_network,
   regulatory_domain: "US"
 
-config :bootloader,
+config :shoehorn,
   init: [:nerves_runtime, :nerves_init_gadget],
   app: :fw
 
