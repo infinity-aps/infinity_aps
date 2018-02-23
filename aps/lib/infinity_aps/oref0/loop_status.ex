@@ -15,7 +15,7 @@ defmodule InfinityAPS.Oref0.LoopStatus do
 
   def init(_) do
     case read_status_from_disk() do
-      {:ok, status} -> {:ok, status}
+      {:ok, state} -> {:ok, state}
       _ -> {:ok, %{}}
     end
   end
@@ -30,11 +30,12 @@ defmodule InfinityAPS.Oref0.LoopStatus do
 
   def handle_call({:update_status_from_disk}, _sender, state) do
     case read_status_from_disk() do
-      new_state = %{status: status, timestamp: timestamp} ->
+      {:ok, new_state = %{status: status, timestamp: timestamp}} ->
         predicted_bgs = timestamp_bgs(status["predBGs"]["IOB"], timestamp)
         GenServer.cast(:glucose_broker, {:predicted_bgs, predicted_bgs})
         {:reply, :ok, new_state}
       response ->
+        Logger.error "could not update from disk: #{inspect response}"
         {:reply, response, state}
 
     end
@@ -58,6 +59,7 @@ defmodule InfinityAPS.Oref0.LoopStatus do
 
   defp status_file do
     filename = "#{loop_dir()}/determine_basal.json"
+    Logger.warn "Looking for #{filename}"
     case File.exists?(filename) do
       true  -> filename
       false -> nil
