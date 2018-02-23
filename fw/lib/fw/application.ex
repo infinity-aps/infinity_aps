@@ -2,7 +2,6 @@ defmodule Fw.Application do
   use Application
   require Logger
   alias InfinityAPS.Configuration.Server
-  alias Pummpcomm.Radio.ChipSupervisor
   alias Phoenix.PubSub.PG2
 
   def start(_type, _args) do
@@ -15,16 +14,9 @@ defmodule Fw.Application do
   end
 
   defp children do
-    children = [
+    [
       Supervisor.child_spec(PG2, start: {PG2, :start_link, [Nerves.PubSub, [poolsize: 1]]}),
     ]
-
-    case host_mode() do
-      true ->
-        children
-      false ->
-        children ++ [ChipSupervisor.child_spec([])]
-    end
   end
 
   defp host_mode do

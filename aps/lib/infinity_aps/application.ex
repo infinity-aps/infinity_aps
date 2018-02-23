@@ -3,7 +3,9 @@ defmodule InfinityAPS.Application do
 
   use Application
   require Logger
+
   alias InfinityAPS.Configuration.Server
+  alias Pummpcomm.Radio.ChipSupervisor
 
   @timeout 30_000
 
@@ -16,6 +18,7 @@ defmodule InfinityAPS.Application do
 
   defp children do
     [
+      ChipSupervisor.child_spec([]),
       InfinityAPS.PummpcommSupervisor.child_spec([]),
       InfinityAPS.Monitor.Loop.child_spec([]),
       InfinityAPS.Oref0.LoopStatus.child_spec([]),
