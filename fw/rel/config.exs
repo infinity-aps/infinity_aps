@@ -28,7 +28,7 @@ end
 
 release :fw do
   set version: current_version(:fw)
-  plugin Shoehorn
+  plugin Bootloader.Plugin
   if System.get_env("NERVES_SYSTEM") do
     set dev_mode: false
     set include_src: false
