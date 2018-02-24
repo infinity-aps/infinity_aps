@@ -37,24 +37,29 @@ export default class GlucoseChart extends Component {
       return {y: sgv.sgv, x: sgv.dateString};
     });
     this.glucoseDataset().data = chartValues;
-    this.updatePredictedGlucoseData(this.predictedDataset().data);
+    this.predictedDataset().data = this.filterPredictedGlucose(this.predictedDataset().data);
+    this.state.glucoseChart.update();
   }
 
   updatePredictedGlucoseData(predicted) {
     if(!predicted) { return; }
-    let mostRecentGlucose = this.mostRecentGlucose();
     let chartValues = predicted.map((bg) => {
       return {y: bg.bg, x: bg.dateString};
-    }).filter((bg) => {
+    });
+    let filteredGlucose = this.filterPredictedGlucose(chartValues);
+    this.predictedDataset().data = filteredGlucose;
+    this.state.glucoseChart.update();
+  }
+
+  filterPredictedGlucose(predicted) {
+    let mostRecentGlucose = this.mostRecentGlucose();
+    if(!mostRecentGlucose) { return []; }
+    return predicted.filter((bg) => {
       if(!mostRecentGlucose || moment(bg.x).isAfter(mostRecentGlucose)) {
         return true;
       }
-      console.log("pruning predicted glucose:", bg);
       return false;
     });
-    console.log("Updating predictedGlucose", chartValues);
-    this.predictedDataset().data = chartValues;
-    this.state.glucoseChart.update();
   }
 
   initializeGlucoseChart(ctx) {
