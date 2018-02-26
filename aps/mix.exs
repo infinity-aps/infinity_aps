@@ -7,6 +7,7 @@ defmodule InfinityAPS.Mixfile do
       version: "0.1.0",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -16,6 +17,12 @@ defmodule InfinityAPS.Mixfile do
     [
       extra_applications: [:logger],
       mod: {InfinityAPS.Application, []}
+    ]
+  end
+
+  defp aliases do
+    [
+      "compile": "compile --warnings-as-errors"
     ]
   end
 

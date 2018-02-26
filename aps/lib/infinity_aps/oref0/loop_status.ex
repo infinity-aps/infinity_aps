@@ -10,13 +10,14 @@ defmodule InfinityAPS.Oref0.LoopStatus do
   alias InfinityAPS.Oref0.PredictedBG
 
   def start_link(args) do
-    GenServer.start_link(__MODULE__, args, name: __MODULE__)
+    GenServer.start_link(__MODULE__, args, name: args[:name] || __MODULE__)
   end
 
-  def init(_) do
-    case read_status_from_disk() do
-      {:ok, state} -> {:ok, state}
-      _ -> {:ok, %{}}
+  def init(args) do
+    path_state = %{loop_directory: args[:loop_directory]}
+    case read_status_from_disk(args[:loop_directory]) do
+      {:ok, state} -> {:ok, Map.merge(path_state, state)}
+      _ -> {:ok, path_state}
     end
   end
 
@@ -27,9 +28,10 @@ defmodule InfinityAPS.Oref0.LoopStatus do
     predicted_bgs = timestamp_bgs(status["predBGs"]["IOB"], timestamp)
     {:reply, {:ok, predicted_bgs}, state}
   end
+  def handle_call({:get_predicted_glucose}, _sender, state = %{}), do: {:reply, {:ok, []}, state}
 
   def handle_call({:update_status_from_disk}, _sender, state) do
-    case read_status_from_disk() do
+    case read_status_from_disk(state.loop_directory) do
       {:ok, new_state = %{status: status, timestamp: timestamp}} ->
         predicted_bgs = timestamp_bgs(status["predBGs"]["IOB"], timestamp)
         GenServer.cast(:glucose_broker, {:predicted_bgs, predicted_bgs})
@@ -45,28 +47,18 @@ defmodule InfinityAPS.Oref0.LoopStatus do
     PredictedBG.apply_timestamp(predicted_bgs, timestamp)
   end
 
-  defp read_status_from_disk do
-    case status_file() do
+  defp read_status_from_disk(loop_directory) do
+    case status_file(loop_directory) do
       nil -> {:error, "Status file doesn't exist"}
       file ->
         status = file |> File.read!() |> Poison.decode!()
         info = File.stat!(file)
         timestamp = info.mtime |> Timex.Timezone.convert(:utc)
-        Logger.info "Read determine_basal.js from disk. mtime is #{inspect timestamp}"
         {:ok, %{status: status, timestamp: timestamp}}
     end
   end
 
-  defp status_file do
-    filename = "#{loop_dir()}/determine_basal.json"
-    Logger.warn "Looking for #{filename}"
-    case File.exists?(filename) do
-      true  -> filename
-      false -> nil
-    end
-  end
-
-  defp loop_dir do
-    Application.get_env(:aps, :loop_directory) |> Path.expand()
+  defp status_file(loop_directory) do
+    Path.expand("determine_basal.json", loop_directory)
   end
 end
