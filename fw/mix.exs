@@ -12,7 +12,7 @@ defmodule Fw.Mixfile do
   def project do
     [app: :fw,
      version: "0.1.0",
-     elixir: "~> 1.5",
+     elixir: "~> 1.6",
      target: @target,
      archives: [nerves_bootstrap: "~> 1.0-rc"],
      deps_path: "deps/#{@target}",

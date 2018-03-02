@@ -5,7 +5,7 @@ defmodule InfinityAPS.Mixfile do
     [
       app: :aps,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.6",
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
       deps: deps()
@@ -21,15 +21,13 @@ defmodule InfinityAPS.Mixfile do
   end
 
   defp aliases do
-    [
-      "compile": "compile --warnings-as-errors"
-    ]
+    ["compile": "compile --warnings-as-errors"]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:pummpcomm, github: "infinity-aps/pummpcomm"},
+      {:pummpcomm, "~> 2.5.1"},
       {:twilight_informant, github: "infinity-aps/twilight_informant", branch: "infinity_aps_integration"},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.0"},
