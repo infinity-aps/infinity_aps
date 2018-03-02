@@ -55,14 +55,6 @@ defmodule Fw.Mixfile do
   end
 
   def system("infinity_rpi0"), do: {:infinity_system_rpi0, ">= 0.0.0", github: "infinity-aps/infinity_system_rpi0", ref: "v1.0.0-rc.0", runtime: false}
-  def system("rpi"), do: {:nerves_system_rpi, ">= 0.0.0", runtime: false}
-  def system("rpi0"), do: {:nerves_system_rpi0, "= 1.0.0-rc0", runtime: false}
-  def system("rpi2"), do: {:nerves_system_rpi2, ">= 0.0.0", runtime: false}
-  def system("rpi3"), do: {:nerves_system_rpi3, ">= 0.0.0", runtime: false}
-  def system("bbb"), do: {:nerves_system_bbb, ">= 0.0.0", runtime: false}
-  def system("linkit"), do: {:nerves_system_linkit, ">= 0.0.0", runtime: false}
-  def system("ev3"), do: {:nerves_system_ev3, ">= 0.0.0", runtime: false}
-  def system("qemu_arm"), do: {:nerves_system_qemu_arm, ">= 0.0.0", runtime: false}
   def system(target), do: Mix.raise "Unknown MIX_TARGET: #{target}"
 
   defp aliases, do: aliases(@target)
