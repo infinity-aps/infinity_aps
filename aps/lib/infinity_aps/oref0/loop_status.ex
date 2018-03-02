@@ -21,8 +21,8 @@ defmodule InfinityAPS.Oref0.LoopStatus do
     end
   end
 
-  def get_predicted_glucose, do: GenServer.call(__MODULE__, {:get_predicted_glucose})
-  def update_status_from_disk, do: GenServer.call(__MODULE__, {:update_status_from_disk})
+  def get_predicted_glucose(name \\ __MODULE__), do: GenServer.call(name, {:get_predicted_glucose})
+  def update_status_from_disk(name \\ __MODULE__), do: GenServer.call(name, {:update_status_from_disk})
 
   def handle_call({:get_predicted_glucose}, _sender, state = %{status: status, timestamp: timestamp}) do
     predicted_bgs = timestamp_bgs(status["predBGs"]["IOB"], timestamp)

@@ -9,7 +9,7 @@ defmodule InfinityAPS.Oref0.LoopStatusTest do
   end
 
   test "get_predicted_glucose returns the correct IOB" do
-    {:ok, predicted_glucose} = LoopStatus.get_predicted_glucose()
+    {:ok, predicted_glucose} = LoopStatus.get_predicted_glucose(:test_loop_status)
     assert length(predicted_glucose) == 39
   end
 
