@@ -27,7 +27,7 @@ config :nerves_network,
 config :nerves_init_gadget,
   address_method: :static
 
-config :bootloader,
+config :shoehorn,
   init: [:nerves_runtime, :nerves_init_gadget],
   app: :fw
 
