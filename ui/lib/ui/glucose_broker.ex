@@ -9,6 +9,10 @@ defmodule InfinityAPS.UI.GlucoseBroker do
     GenServer.start_link(__MODULE__, args, name: :glucose_broker)
   end
 
+  def init(state) do
+    {:ok, state}
+  end
+
   def get_sensor_glucose do
     Entries.get_sensor_glucose()
   end
