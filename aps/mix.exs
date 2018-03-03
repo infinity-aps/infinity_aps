@@ -8,7 +8,10 @@ defmodule InfinityAPS.Mixfile do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      preferred_cli_env: [
+        dialyzer: :test
+      ]
     ]
   end
 
