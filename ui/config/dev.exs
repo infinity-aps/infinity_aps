@@ -24,8 +24,8 @@ config :ui, InfinityAPS.UI.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: []
-
+  watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
+                    cd: Path.expand("../assets", __DIR__)]]
 
 # Watch static and templates for browser reloading.
 config :ui, InfinityAPS.UI.Endpoint,
@@ -33,8 +33,8 @@ config :ui, InfinityAPS.UI.Endpoint,
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
-      ~r{web/views/.*(ex)$},
-      ~r{web/templates/.*(eex)$}
+      ~r{lib/ui_web/views/.*(ex)$},
+      ~r{lib/ui_web/templates/.*(eex)$}
     ]
   ]
 
@@ -44,3 +44,13 @@ config :logger, :console, format: "[$level] $message\n"
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
+
+config :cfg, InfinityAPS.Configuration,
+  file: "#{File.cwd!}/../host_root/host_config.json"
+
+config :infinity_aps,
+  loop_directory: "#{File.cwd!}/../host_root/loop",
+  host_mode: true
+
+config :pummpcomm, :pump, Pummpcomm.Session.PumpFake
+config :pummpcomm, :cgm, Pummpcomm.Session.PumpFake

@@ -1,3 +1,0 @@
-defmodule InfinityAPS do
-
-end

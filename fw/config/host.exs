@@ -2,12 +2,15 @@ use Mix.Config
 
 config :logger, level: :debug
 
+config :fw,
+  host_mode: true
+
 config :cfg, InfinityAPS.Configuration,
   file: "#{File.cwd!}/../host_root/host_config.json"
 
-config :infinity_aps,
+config :aps,
   loop_directory: "#{File.cwd!}/../host_root/loop",
-  host_mode: true
+  node_modules_directory: "#{File.cwd!}/../host_root/node_modules"
 
 config :pummpcomm, :pump, Pummpcomm.Session.PumpFake
 config :pummpcomm, :cgm, Pummpcomm.Session.PumpFake
@@ -20,4 +23,17 @@ config :ui, InfinityAPS.UI.Endpoint,
   server: true,
   render_errors: [accepts: ~w(html json)],
   pubsub: [name: InfinityAPS.UI.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+           adapter: Phoenix.PubSub.PG2],
+  debug_errors: true,
+  code_reloader: true,
+  check_origin: false,
+  watchers: [node: ["../../ui/assets/node_modules/brunch/bin/brunch", "watch", "--stdin",
+                    cd: Path.expand("../../ui/assets", __DIR__)]],
+  live_reload: [
+    patterns: [
+      ~r{../../ui/priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
+      ~r{../../ui/priv/gettext/.*(po)$},
+      ~r{../../ui/lib/ui_web/views/.*(ex)$},
+      ~r{../../ui/lib/ui_web/templates/.*(eex)$}
+    ]
+  ]

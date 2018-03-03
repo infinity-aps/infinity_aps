@@ -1,0 +1,7 @@
+<h2>Infinity APS</h2>
+
+<div class="container">
+  <div class="row">
+    <div id="glucose-react" class="chart"></div>
+  </div>
+</div>

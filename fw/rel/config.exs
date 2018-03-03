@@ -26,9 +26,9 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :infinity_aps do
-  set version: current_version(:infinity_aps)
-  plugin Bootloader.Plugin
+release :fw do
+  set version: current_version(:fw)
+  plugin Shoehorn
   if System.get_env("NERVES_SYSTEM") do
     set dev_mode: false
     set include_src: false

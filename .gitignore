@@ -12,7 +12,9 @@ nerves_aps/.nerves
 */erl_crash.dump
 
 # Host loop files
-host_root
+host_root/host_config.json
+host_root/loop
+host_root/node_modules
 
 # private configuration
 fw/config/config.priv.exs
