@@ -5,4 +5,4 @@
 # is restricted to this project.
 use Mix.Config
 
-import_config "#{Mix.Project.config[:target]}.exs"
+import_config "#{Mix.Project.config()[:target]}.exs"

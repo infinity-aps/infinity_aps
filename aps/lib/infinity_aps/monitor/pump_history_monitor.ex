@@ -3,6 +3,7 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
 
   def loop(local_timezone) do
     history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(1440, local_timezone)
+
     with {:ok, history} <- history_response do
       write_history(history, local_timezone)
     end
@@ -12,26 +13,55 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
     loop_dir = Application.get_env(:aps, :loop_directory) |> Path.expand()
     File.mkdir_p!(loop_dir)
 
-    encoded = history
-    |> Enum.filter(&filter_history/1)
-    |> Enum.map(fn(entry) -> map_history(entry, local_timezone) end)
-    |> Poison.encode!
+    encoded =
+      history
+      |> Enum.filter(&filter_history/1)
+      |> Enum.map(fn entry -> map_history(entry, local_timezone) end)
+      |> Poison.encode!()
 
     File.write!("#{loop_dir}/history.json", encoded, [:binary])
   end
 
-  defp filter_history({entry, _}) when entry in [:temp_basal, :temp_basal_duration, :bolus_wizard_estimate, :bolus_normal], do: true
+  defp filter_history({entry, _})
+       when entry in [:temp_basal, :temp_basal_duration, :bolus_wizard_estimate, :bolus_normal],
+       do: true
+
   defp filter_history(_), do: false
 
-  defp map_history({:temp_basal, %{rate: rate, rate_type: rate_type, timestamp: timestamp}}, local_timezone) do
-    %{"_type" => "TempBasal", "timestamp" => formatted_time(timestamp, local_timezone), "rate" => rate, "temp" => Atom.to_string(rate_type)}
+  defp map_history(
+         {:temp_basal, %{rate: rate, rate_type: rate_type, timestamp: timestamp}},
+         local_timezone
+       ) do
+    %{
+      "_type" => "TempBasal",
+      "timestamp" => formatted_time(timestamp, local_timezone),
+      "rate" => rate,
+      "temp" => Atom.to_string(rate_type)
+    }
   end
 
-  defp map_history({:temp_basal_duration, %{duration: duration, timestamp: timestamp}}, local_timezone) do
-    %{"_type" => "TempBasalDuration", "timestamp" => formatted_time(timestamp, local_timezone), "duration (min)" => duration}
+  defp map_history(
+         {:temp_basal_duration, %{duration: duration, timestamp: timestamp}},
+         local_timezone
+       ) do
+    %{
+      "_type" => "TempBasalDuration",
+      "timestamp" => formatted_time(timestamp, local_timezone),
+      "duration (min)" => duration
+    }
   end
 
-  defp map_history({:bolus_normal, %{programmed: programmed, duration: duration, amount: amount, type: type, timestamp: timestamp}}, local_timezone) do
+  defp map_history(
+         {:bolus_normal,
+          %{
+            programmed: programmed,
+            duration: duration,
+            amount: amount,
+            type: type,
+            timestamp: timestamp
+          }},
+         local_timezone
+       ) do
     %{
       "_type" => "Bolus",
       "timestamp" => formatted_time(timestamp, local_timezone),

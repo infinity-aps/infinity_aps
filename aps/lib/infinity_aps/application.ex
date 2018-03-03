@@ -21,16 +21,25 @@ defmodule InfinityAPS.Application do
       ChipSupervisor.child_spec([]),
       InfinityAPS.PummpcommSupervisor.child_spec([]),
       InfinityAPS.Monitor.Loop.child_spec([]),
-      InfinityAPS.Oref0.LoopStatus.child_spec(loop_directory: Application.get_env(:aps, :loop_directory)),
+      InfinityAPS.Oref0.LoopStatus.child_spec(
+        loop_directory: Application.get_env(:aps, :loop_directory)
+      ),
       InfinityAPS.Oref0.Entries.child_spec([])
     ]
+
     # children ++ [ChipSupervisor.child_spec([])]
   end
 
   defp start_twilight_informant do
     Application.put_env(:twilight_informant, :ns_url, Server.get_config(:nightscout_url))
     Application.put_env(:twilight_informant, :api_secret, Server.get_config(:nightscout_token))
-    Application.put_env(:twilight_informant, :httpoison_opts, timeout: @timeout, recv_timeout: @timeout)
+
+    Application.put_env(
+      :twilight_informant,
+      :httpoison_opts,
+      timeout: @timeout,
+      recv_timeout: @timeout
+    )
 
     TwilightInformant.Configuration.start(nil, nil)
   end
@@ -49,13 +58,19 @@ defmodule InfinityAPS.PummpcommSupervisor do
   def start_workers(sup) do
     [:cgm, :pump]
     |> Enum.uniq()
-    |> Enum.each(fn(provider) ->
-      Supervisor.start_child(sup, worker(Application.get_env(:pummpcomm, provider), [Server.get_config(:pump_serial), local_timezone()]))
+    |> Enum.each(fn provider ->
+      Supervisor.start_child(
+        sup,
+        worker(Application.get_env(:pummpcomm, provider), [
+          Server.get_config(:pump_serial),
+          local_timezone()
+        ])
+      )
     end)
   end
 
   def init(_) do
-    supervise [], strategy: :one_for_one
+    supervise([], strategy: :one_for_one)
   end
 
   defp local_timezone do

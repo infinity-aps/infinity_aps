@@ -2,15 +2,13 @@ use Mix.Config
 
 config :logger, level: :debug
 
-config :fw,
-  host_mode: true
+config :fw, host_mode: true
 
-config :cfg, InfinityAPS.Configuration,
-  file: "#{File.cwd!}/../host_root/host_config.json"
+config :cfg, InfinityAPS.Configuration, file: "#{File.cwd!()}/../host_root/host_config.json"
 
 config :aps,
-  loop_directory: "#{File.cwd!}/../host_root/loop",
-  node_modules_directory: "#{File.cwd!}/../host_root/node_modules"
+  loop_directory: "#{File.cwd!()}/../host_root/loop",
+  node_modules_directory: "#{File.cwd!()}/../host_root/node_modules"
 
 config :pummpcomm, :pump, Pummpcomm.Session.PumpFake
 config :pummpcomm, :cgm, Pummpcomm.Session.PumpFake
@@ -22,13 +20,18 @@ config :ui, InfinityAPS.UI.Endpoint,
   root: Path.dirname(__DIR__),
   server: true,
   render_errors: [accepts: ~w(html json)],
-  pubsub: [name: InfinityAPS.UI.PubSub,
-           adapter: Phoenix.PubSub.PG2],
+  pubsub: [name: InfinityAPS.UI.PubSub, adapter: Phoenix.PubSub.PG2],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: [node: ["../../ui/assets/node_modules/brunch/bin/brunch", "watch", "--stdin",
-                    cd: Path.expand("../../ui/assets", __DIR__)]],
+  watchers: [
+    node: [
+      "../../ui/assets/node_modules/brunch/bin/brunch",
+      "watch",
+      "--stdin",
+      cd: Path.expand("../../ui/assets", __DIR__)
+    ]
+  ],
   live_reload: [
     patterns: [
       ~r{../../ui/priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},

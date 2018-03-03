@@ -18,15 +18,18 @@ defmodule InfinityAPS.Oref0.Entries do
   def handle_call({:get_sensor_glucose}, _sender, state = %{sgvs: sgvs}) do
     {:reply, {:ok, sgvs}, state}
   end
-  def handle_call({:get_sensor_glucose}, _sender, state), do: {:reply, {:error, "No sgvs cached"}, state}
+
+  def handle_call({:get_sensor_glucose}, _sender, state),
+    do: {:reply, {:error, "No sgvs cached"}, state}
 
   def handle_call({:write_entries, entries}, _sender, _state) do
     loop_dir = Application.get_env(:aps, :loop_directory) |> Path.expand()
     File.mkdir_p!(loop_dir)
 
-    filtered_entries = entries
-    |> Enum.filter(&filter_sgv/1)
-    |> Enum.map(fn(entry) -> map_sgv(entry, local_timezone()) end)
+    filtered_entries =
+      entries
+      |> Enum.filter(&filter_sgv/1)
+      |> Enum.map(fn entry -> map_sgv(entry, local_timezone()) end)
 
     File.write!("#{loop_dir}/cgm.json", Poison.encode!(filtered_entries), [:binary])
 
@@ -36,7 +39,7 @@ defmodule InfinityAPS.Oref0.Entries do
   end
 
   defp filter_sgv({:sensor_glucose_value, _}), do: true
-  defp filter_sgv(_),                          do: false
+  defp filter_sgv(_), do: false
 
   defp map_sgv({:sensor_glucose_value, entry_data}, local_timezone) do
     date_with_zone = Timex.to_datetime(entry_data.timestamp, local_timezone)

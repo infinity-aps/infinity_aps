@@ -3,32 +3,34 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
   alias InfinityAPS.Configuration.Server
 
   def loop(local_timezone) do
-    Logger.debug "Reading profile information"
+    Logger.debug("Reading profile information")
 
     pump = pump()
 
-    with {:ok, bg_targets}            <- pump.read_bg_targets(),
-         {:ok, settings}              <- pump.read_settings(),
-         {:ok, carb_ratios}           <- pump.read_carb_ratios(),
+    with {:ok, bg_targets} <- pump.read_bg_targets(),
+         {:ok, settings} <- pump.read_settings(),
+         {:ok, carb_ratios} <- pump.read_carb_ratios(),
          {:ok, insulin_sensitivities} <- pump.read_insulin_sensitivities(),
-         {:ok, basal_profile}         <- pump.read_std_basal_profile(),
-         {:ok, model_number}          <- pump.get_model_number(),
-         %{preferences: preferences}  <- Server.get_config() do
+         {:ok, basal_profile} <- pump.read_std_basal_profile(),
+         {:ok, model_number} <- pump.get_model_number(),
+         %{preferences: preferences} <- Server.get_config() do
+      profile =
+        format_profile(
+          bg_targets: bg_targets,
+          preferences: preferences,
+          settings: settings,
+          carb_ratios: carb_ratios,
+          insulin_sensitivities: insulin_sensitivities,
+          basal_profile: basal_profile,
+          model_number: model_number,
+          local_timezone: local_timezone
+        )
 
-      profile = format_profile(
-        bg_targets: bg_targets,
-        preferences: preferences,
-        settings: settings,
-        carb_ratios: carb_ratios,
-        insulin_sensitivities: insulin_sensitivities,
-        basal_profile: basal_profile,
-        model_number: model_number,
-        local_timezone: local_timezone
-      )
-      Logger.info fn() -> inspect(profile) end
+      Logger.info(fn -> inspect(profile) end)
       write_profile(profile)
     else
-      error -> Logger.error fn() -> "Error while reading profile information: #{inspect(error)}" end
+      error ->
+        Logger.error(fn -> "Error while reading profile information: #{inspect(error)}" end)
     end
   end
 
@@ -37,11 +39,15 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
   end
 
   defp format_profile(
-    bg_targets: bg_targets, preferences: preferences, settings: _settings,
-    carb_ratios: _carb_ratios, insulin_sensitivities: _insulin_sensitivities,
-    basal_profile: basal_profile, model_number: model_number,
-    local_timezone: local_timezone) do
-
+         bg_targets: bg_targets,
+         preferences: preferences,
+         settings: _settings,
+         carb_ratios: _carb_ratios,
+         insulin_sensitivities: _insulin_sensitivities,
+         basal_profile: basal_profile,
+         model_number: model_number,
+         local_timezone: local_timezone
+       ) do
     %{
       max_iob: preferences.max_iob,
       max_daily_safety_multiplier: preferences.max_daily_safety_multiplier,
@@ -49,7 +55,8 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
       carbratio_adjustmentratio: 1,
       dia: 4,
       model: Integer.to_string(model_number),
-      current_basal: current_basal(basal_profile.schedule, DateTime.to_time(Timex.now(local_timezone))),
+      current_basal:
+        current_basal(basal_profile.schedule, DateTime.to_time(Timex.now(local_timezone))),
       min_bg: 80,
       max_bg: 120,
       sens: 30,
@@ -62,18 +69,19 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
     %{
       units: bg_targets.units,
       user_preferred_units: bg_targets.units,
-      targets: Enum.map(bg_targets.targets, fn(target) ->
-        %{
-          min_bg: target.bg_low,
-          max_bg: target.bg_high,
-          start: Time.to_string(target.start)
-        }
-      end)
+      targets:
+        Enum.map(bg_targets.targets, fn target ->
+          %{
+            min_bg: target.bg_low,
+            max_bg: target.bg_high,
+            start: Time.to_string(target.start)
+          }
+        end)
     }
   end
 
   def current_basal(basal_schedule, current_time) do
-    Enum.reduce_while(basal_schedule, nil, fn(schedule_entry, rate) ->
+    Enum.reduce_while(basal_schedule, nil, fn schedule_entry, rate ->
       case Timex.before?(current_time, schedule_entry.start) do
         true -> {:halt, rate}
         false -> {:cont, schedule_entry.rate}
@@ -83,7 +91,7 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
 
   defp format_basal_profile(basal_profile) do
     basal_profile.schedule
-    |> Enum.map(fn(item) ->
+    |> Enum.map(fn item ->
       %{
         start: Time.to_string(item.start),
         rate: item.rate

@@ -15,7 +15,7 @@ defmodule Fw.Application do
 
   defp children do
     [
-      Supervisor.child_spec(PG2, start: {PG2, :start_link, [Nerves.PubSub, [poolsize: 1]]}),
+      Supervisor.child_spec(PG2, start: {PG2, :start_link, [Nerves.PubSub, [poolsize: 1]]})
     ]
   end
 
@@ -25,12 +25,13 @@ defmodule Fw.Application do
 
   @key_mgmt :"WPA-PSK"
   defp init_network() do
-    Logger.info fn() -> "Initializing Network" end
+    Logger.info(fn -> "Initializing Network" end)
     ssid = Server.get_config(:wifi_ssid)
     psk = Server.get_config(:wifi_psk)
+
     case psk || "" do
-      "" -> Nerves.Network.setup "wlan0", ssid: ssid, key_mgmt: :"NONE"
-      _ -> Nerves.Network.setup "wlan0", ssid: ssid, psk: psk, key_mgmt: @key_mgmt
+      "" -> Nerves.Network.setup("wlan0", ssid: ssid, key_mgmt: :NONE)
+      _ -> Nerves.Network.setup("wlan0", ssid: ssid, psk: psk, key_mgmt: @key_mgmt)
     end
   end
 end

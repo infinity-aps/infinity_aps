@@ -14,12 +14,16 @@ defmodule ProfileMonitorTest do
     {:ok, %{basal_schedule: basal_schedule}}
   end
 
-  test "current_basal return correct rate in between scheduled times", %{basal_schedule: basal_schedule} do
+  test "current_basal return correct rate in between scheduled times", %{
+    basal_schedule: basal_schedule
+  } do
     current_time = ~T[10:00:00]
     assert 1.10 == ProfileMonitor.current_basal(basal_schedule, current_time)
   end
 
-  test "current_basal return correct rate at exact start of day", %{basal_schedule: basal_schedule} do
+  test "current_basal return correct rate at exact start of day", %{
+    basal_schedule: basal_schedule
+  } do
     current_time = ~T[00:00:00]
     assert 0.80 == ProfileMonitor.current_basal(basal_schedule, current_time)
   end
@@ -28,5 +32,4 @@ defmodule ProfileMonitorTest do
     current_time = ~T[23:59:59]
     assert 0.95 == ProfileMonitor.current_basal(basal_schedule, current_time)
   end
-
 end

@@ -7,8 +7,9 @@ defmodule InfinityAPS.Configuration.Application do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(InfinityAPS.Configuration.Server,
-        [Keyword.get(Application.get_env(:cfg, InfinityAPS.Configuration), :file)])
+      worker(InfinityAPS.Configuration.Server, [
+        Keyword.get(Application.get_env(:cfg, InfinityAPS.Configuration), :file)
+      ])
     ]
 
     opts = [strategy: :one_for_one, name: InfinityAPS.Configuration.Supervisor]

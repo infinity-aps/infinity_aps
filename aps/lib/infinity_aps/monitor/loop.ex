@@ -15,7 +15,7 @@ defmodule InfinityAPS.Monitor.Loop do
 
   @way_back_when ~N[1980-01-01 00:00:00]
   def handle_info(:loop, state) do
-    case set_system_time_from_pump(Timex.before?(Timex.now, @way_back_when)) do
+    case set_system_time_from_pump(Timex.before?(Timex.now(), @way_back_when)) do
       {:ok} ->
         InfinityAPS.Monitor.GlucoseMonitor.loop(local_timezone())
         InfinityAPS.Monitor.PumpHistoryMonitor.loop(local_timezone())
@@ -27,6 +27,7 @@ defmodule InfinityAPS.Monitor.Loop do
         InfinityAPS.Monitor.EnactTempBasal.loop()
         InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop(local_timezone())
         schedule_work()
+
       {:error, error} ->
         Logger.error("Unable to set system time: #{inspect(error)}")
         schedule_work(30_000)
@@ -35,17 +36,20 @@ defmodule InfinityAPS.Monitor.Loop do
     {:noreply, state}
   end
 
-  @after_period 4 * 60 * 1000 # 4 minutes
+  # 4 minutes
+  @after_period 4 * 60 * 1000
   defp schedule_work(after_period \\ @after_period) do
     Process.send_after(self(), :loop, after_period)
   end
 
   defp set_system_time_from_pump(false), do: {:ok}
+
   defp set_system_time_from_pump(true) do
     with {:ok, pump_time} <- pump().read_time(),
-         utc_zoned_time <- Timex.to_datetime(pump_time, local_timezone()) |> Timex.Timezone.convert(:utc),
+         utc_zoned_time <-
+           Timex.to_datetime(pump_time, local_timezone()) |> Timex.Timezone.convert(:utc),
          {:ok, formatted_time} <- Timex.format(utc_zoned_time, "%Y-%m-%d %H:%M:%S", :strftime) do
-      Logger.warn "Setting system time from pump to #{formatted_time} (UTC)"
+      Logger.warn("Setting system time from pump to #{formatted_time} (UTC)")
       System.cmd("date", ["-s", formatted_time])
       {:ok}
     else

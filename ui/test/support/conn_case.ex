@@ -28,7 +28,6 @@ defmodule InfinityAPS.UI.ConnCase do
   end
 
   setup tags do
-
     _ = tags
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

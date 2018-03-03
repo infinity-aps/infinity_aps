@@ -3,7 +3,12 @@ defmodule InfinityAPS.Oref0.LoopStatusTest do
   alias InfinityAPS.Oref0.LoopStatus
 
   setup do
-    {:ok, pid} = LoopStatus.start_link(loop_directory: "#{File.cwd!}/test/fixtures", name: :test_loop_status)
+    {:ok, pid} =
+      LoopStatus.start_link(
+        loop_directory: "#{File.cwd!()}/test/fixtures",
+        name: :test_loop_status
+      )
+
     on_exit(fn -> assert_down(pid) end)
     :ok
   end

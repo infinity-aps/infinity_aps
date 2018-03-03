@@ -22,12 +22,17 @@ defmodule InfinityAPS.UI.GlucoseBroker do
   end
 
   def handle_cast({:sgvs, sgvs}, state) do
-    Logger.warn InfinityAPS.UI.Endpoint.broadcast("loop_status:glucose", "sgvs", %{data: sgvs})
+    Logger.warn(InfinityAPS.UI.Endpoint.broadcast("loop_status:glucose", "sgvs", %{data: sgvs}))
     {:noreply, state}
   end
 
   def handle_cast({:predicted_bgs, predicted_bgs}, state) do
-    Logger.warn InfinityAPS.UI.Endpoint.broadcast("loop_status:glucose", "predicted_bgs", %{data: predicted_bgs})
+    Logger.warn(
+      InfinityAPS.UI.Endpoint.broadcast("loop_status:glucose", "predicted_bgs", %{
+        data: predicted_bgs
+      })
+    )
+
     {:noreply, state}
   end
 end
