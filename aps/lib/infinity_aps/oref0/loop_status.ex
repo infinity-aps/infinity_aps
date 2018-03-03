@@ -48,13 +48,14 @@ defmodule InfinityAPS.Oref0.LoopStatus do
   end
 
   defp read_status_from_disk(loop_directory) do
-    case status_file(loop_directory) do
-      nil -> {:error, "Status file doesn't exist"}
-      file ->
-        status = file |> File.read!() |> Poison.decode!()
-        info = File.stat!(file)
-        timestamp = info.mtime |> Timex.Timezone.convert(:utc)
-        {:ok, %{status: status, timestamp: timestamp}}
+    with file <- status_file(loop_directory),
+         {:ok, contents} <- File.read(file),
+         {:ok, status} <- Poison.decode(contents),
+         {:ok, info} <- File.stat(file),
+           timestamp <- Timex.Timezone.convert(info.mtime, :utc) do
+      {:ok, %{status: status, timestamp: timestamp}}
+    else
+      error -> error
     end
   end
 
