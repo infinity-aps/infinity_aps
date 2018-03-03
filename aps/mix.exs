@@ -31,7 +31,9 @@ defmodule InfinityAPS.Mixfile do
       {:twilight_informant, github: "infinity-aps/twilight_informant", branch: "infinity_aps_integration"},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.0"},
-      {:cfg, path: "../cfg"}
+      {:cfg, path: "../cfg"},
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 0.5.1", only: :test, runtime: false}
     ]
   end
 end

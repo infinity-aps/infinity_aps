@@ -43,15 +43,16 @@ defmodule Fw.Mixfile do
   end
 
   def deps("host") do
-    [{:phoenix_live_reload, "~> 1.1"}]
+    [{:phoenix_live_reload, "~> 1.1"},
+     {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+     {:dialyxir, "~> 0.5.1", only: :test, runtime: false}]
   end
 
   def deps(target) do
-    [ system(target),
-      {:shoehorn, "~> 0.2"},
-      {:nerves_runtime, "~> 0.5"},
-      {:nerves_init_gadget, github: "nerves-project/nerves_init_gadget", ref: "dhcp"}
-    ]
+    [system(target),
+     {:shoehorn, "~> 0.2"},
+     {:nerves_runtime, "~> 0.5"},
+     {:nerves_init_gadget, github: "nerves-project/nerves_init_gadget", ref: "dhcp"}]
   end
 
   def system("infinity_rpi0"), do: {:infinity_system_rpi0, ">= 0.0.0", github: "infinity-aps/infinity_system_rpi0", ref: "v1.0.0-rc.0", runtime: false}
