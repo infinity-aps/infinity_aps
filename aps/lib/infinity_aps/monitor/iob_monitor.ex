@@ -1,15 +1,19 @@
 defmodule InfinityAPS.Monitor.IOBMonitor do
+  @moduledoc false
   require Logger
 
   def loop(timezone) do
-    Logger.debug "Calculating IOB"
+    Logger.debug("Calculating IOB")
 
     case pump().read_time() do
       {:ok, time} ->
         write_time(time, timezone)
+
         calculate_iob()
         |> write_iob()
-      response          -> Logger.warn "Got: #{inspect(response)}"
+
+      response ->
+        Logger.warn("Got: #{inspect(response)}")
     end
   end
 
@@ -19,13 +23,16 @@ defmodule InfinityAPS.Monitor.IOBMonitor do
 
   defp calculate_iob do
     inputs = ["history.json", "profile.json", "clock.json"]
-    oref0_calculate_iob = "#{Application.get_env(:aps, :node_modules_directory)}/oref0/bin/oref0-calculate-iob.js"
+
+    oref0_calculate_iob =
+      "#{Application.get_env(:aps, :node_modules_directory)}/oref0/bin/oref0-calculate-iob.js"
+
     {iob_results, 0} = System.cmd("node", [oref0_calculate_iob | inputs], cd: loop_dir())
     iob_results
   end
 
   defp loop_dir do
-    Application.get_env(:aps, :loop_directory) |> Path.expand()
+    Path.expand(Application.get_env(:aps, :loop_directory))
   end
 
   defp write_iob(iob_results) do
@@ -39,7 +46,8 @@ defmodule InfinityAPS.Monitor.IOBMonitor do
   end
 
   defp formatted_time(timestamp, timezone) do
-    Timex.to_datetime(timestamp, timezone)
+    timestamp
+    |> Timex.to_datetime(timezone)
     |> Timex.format!("{ISO:Extended}")
   end
 end

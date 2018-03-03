@@ -6,10 +6,13 @@ defmodule InfinityAPS.UI.Mixfile do
       app: :ui,
       version: "0.0.1",
       elixir: "~> 1.6",
-      elixirc_paths: elixirc_paths(Mix.env),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers,
-      start_permanent: Mix.env == :prod,
-      deps: deps()
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      preferred_cli_env: [
+        dialyzer: :test
+      ]
     ]
   end
 
@@ -25,7 +28,7 @@ defmodule InfinityAPS.UI.Mixfile do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #
@@ -40,7 +43,9 @@ defmodule InfinityAPS.UI.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:cfg, path: "../cfg"},
-      {:aps, path: "../aps"}
+      {:aps, path: "../aps"},
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 0.5.1", only: :test, runtime: false}
     ]
   end
 end

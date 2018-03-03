@@ -1,4 +1,6 @@
 defmodule InfinityAPS.UI.LoopStatusChannel do
+  @moduledoc false
+
   use Phoenix.Channel
 
   require Logger
@@ -12,13 +14,13 @@ defmodule InfinityAPS.UI.LoopStatusChannel do
 
   def handle_info({:after_join_glucose}, socket) do
     case GlucoseBroker.get_sensor_glucose() do
-      {:ok, svgs} -> push socket, "sgvs", %{data: svgs}
-      response             -> Logger.warn "Got: #{inspect(response)}"
+      {:ok, svgs} -> push(socket, "sgvs", %{data: svgs})
+      response -> Logger.warn("Got: #{inspect(response)}")
     end
 
     case GlucoseBroker.get_predicted_bgs() do
-      {:ok, predicted_bgs} -> push socket, "predicted_bgs", %{data: predicted_bgs}
-      response             -> Logger.warn "Got: #{inspect(response)}"
+      {:ok, predicted_bgs} -> push(socket, "predicted_bgs", %{data: predicted_bgs})
+      response -> Logger.warn("Got: #{inspect(response)}")
     end
 
     {:noreply, socket}

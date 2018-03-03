@@ -1,0 +1,25 @@
+language: elixir
+
+elixir:
+  - 1.6.2
+
+otp_release:
+  - 20.1
+
+env:
+  - APP_DIR=aps
+  - APP_DIR=ui
+  - APP_DIR=fw
+
+before_install:
+  - cd $APP_DIR
+
+install:
+  - mix local.rebar --force
+  - mix local.hex --force
+  - mix archive.install hex nerves_bootstrap 1.0.0-rc.0 --force
+  - mix deps.get
+
+script:
+  - mix credo --strict
+  - mix test

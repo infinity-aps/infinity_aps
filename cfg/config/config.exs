@@ -3,5 +3,4 @@
 use Mix.Config
 
 config :logger, level: :debug
-config :cfg, InfinityAPS.Configuration,
-  file: "#{File.cwd!}/../host_config.json"
+config :cfg, InfinityAPS.Configuration, file: "#{File.cwd!()}/../host_config.json"

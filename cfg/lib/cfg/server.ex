@@ -14,23 +14,23 @@ defmodule InfinityAPS.Configuration.Server do
   end
 
   def get_config() do
-    GenServer.call __MODULE__, {:get_config}
+    GenServer.call(__MODULE__, {:get_config})
   end
 
   def get_config(key) do
-    GenServer.call __MODULE__, {:get_config, key}
+    GenServer.call(__MODULE__, {:get_config, key})
   end
 
   def set_config(config = %ConfigurationData{}) do
-    GenServer.call __MODULE__, {:set_config, config}
+    GenServer.call(__MODULE__, {:set_config, config})
   end
 
   def set_config(key, value) do
-    GenServer.call __MODULE__, {:set_config, key, value}
+    GenServer.call(__MODULE__, {:set_config, key, value})
   end
 
   def save_config() do
-    GenServer.call __MODULE__, {:save_config}
+    GenServer.call(__MODULE__, {:save_config})
   end
 
   def handle_call({:get_config}, _from, state = {_file, config_map}) do
@@ -63,12 +63,13 @@ defmodule InfinityAPS.Configuration.Server do
   end
 
   defp decode_config(<<>>), do: {:ok, %ConfigurationData{}}
-  defp decode_config(config_data) when is_binary(config_data), do: Poison.decode(config_data, as: %ConfigurationData{})
+
+  defp decode_config(config_data) when is_binary(config_data),
+    do: Poison.decode(config_data, as: %ConfigurationData{})
 
   defp write_config({file, config_map}) do
     with {:ok, config_data} <- Poison.encode(config_map),
          :ok <- File.write(file, config_data) do
-
       # Temporary way to apply configuration
       Logger.info("Configuration saved, rebooting")
       Nerves.Runtime.reboot()
