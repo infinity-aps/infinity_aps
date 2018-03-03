@@ -4,14 +4,7 @@ config :logger, level: :debug
 
 config :fw, host_mode: true
 
-config :cfg, InfinityAPS.Configuration, file: "#{File.cwd!()}/../host_root/host_config.json"
-
-config :aps,
-  loop_directory: "#{File.cwd!()}/../host_root/loop",
-  node_modules_directory: "#{File.cwd!()}/../host_root/node_modules"
-
-config :pummpcomm, :pump, Pummpcomm.Session.PumpFake
-config :pummpcomm, :cgm, Pummpcomm.Session.PumpFake
+import_config Path.expand("../aps/config/config.exs")
 
 config :ui, InfinityAPS.UI.Endpoint,
   http: [port: 4000],

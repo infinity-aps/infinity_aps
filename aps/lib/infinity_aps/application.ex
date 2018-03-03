@@ -25,9 +25,7 @@ defmodule InfinityAPS.Application do
       ChipSupervisor.child_spec([]),
       PummpcommSupervisor.child_spec([]),
       Loop.child_spec([]),
-      LoopStatus.child_spec(
-        loop_directory: Application.get_env(:aps, :loop_directory)
-      ),
+      LoopStatus.child_spec(loop_directory: Application.get_env(:aps, :loop_directory)),
       Entries.child_spec([])
     ]
 
