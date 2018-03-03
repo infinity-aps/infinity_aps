@@ -8,6 +8,7 @@ defmodule InfinityAPS.Oref0.LoopStatus do
   require Logger
 
   alias InfinityAPS.Oref0.PredictedBG
+  alias Timex.Timezone
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: args[:name] || __MODULE__)
@@ -61,7 +62,7 @@ defmodule InfinityAPS.Oref0.LoopStatus do
          {:ok, contents} <- File.read(file),
          {:ok, status} <- Poison.decode(contents),
          {:ok, info} <- File.stat(file),
-         timestamp <- Timex.Timezone.convert(info.mtime, :utc) do
+         timestamp <- Timezone.convert(info.mtime, :utc) do
       {:ok, %{status: status, timestamp: timestamp}}
     else
       error -> error

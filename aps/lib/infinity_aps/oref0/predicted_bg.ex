@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Oref0.PredictedBG do
+  @moduledoc false
   def apply_timestamp(nil, _), do: nil
 
   def apply_timestamp(bgs, start_timestamp) do

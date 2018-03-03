@@ -1,12 +1,17 @@
 defmodule InfinityAPS.UI do
+  @moduledoc false
+
   use Application
+
+  alias InfinityAPS.UI.GlucoseBroker
+  alias InfinityAPS.UI.Endpoint
 
   def start(_type, _args) do
     import Supervisor.Spec
 
     children = [
-      supervisor(InfinityAPS.UI.Endpoint, []),
-      InfinityAPS.UI.GlucoseBroker.child_spec(nil)
+      supervisor(Endpoint, []),
+      GlucoseBroker.child_spec(nil)
     ]
 
     opts = [strategy: :one_for_one, name: InfinityAPS.UI.Supervisor]
@@ -14,7 +19,7 @@ defmodule InfinityAPS.UI do
   end
 
   def config_change(changed, _new, removed) do
-    InfinityAPS.UI.Endpoint.config_change(changed, removed)
+    Endpoint.config_change(changed, removed)
     :ok
   end
 end

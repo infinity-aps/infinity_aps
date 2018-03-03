@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Monitor.IOBMonitor do
+  @moduledoc false
   require Logger
 
   def loop(timezone) do
@@ -31,7 +32,7 @@ defmodule InfinityAPS.Monitor.IOBMonitor do
   end
 
   defp loop_dir do
-    Application.get_env(:aps, :loop_directory) |> Path.expand()
+    Path.expand(Application.get_env(:aps, :loop_directory))
   end
 
   defp write_iob(iob_results) do
@@ -45,7 +46,8 @@ defmodule InfinityAPS.Monitor.IOBMonitor do
   end
 
   defp formatted_time(timestamp, timezone) do
-    Timex.to_datetime(timestamp, timezone)
+    timestamp
+    |> Timex.to_datetime(timezone)
     |> Timex.format!("{ISO:Extended}")
   end
 end

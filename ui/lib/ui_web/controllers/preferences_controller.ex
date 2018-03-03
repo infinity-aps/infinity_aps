@@ -1,5 +1,9 @@
 defmodule InfinityAPS.UI.PreferencesController do
+  @moduledoc false
+
   use InfinityAPS.UI.Web, :controller
+
+  alias Ecto.Changeset
   alias InfinityAPS.Configuration.Preferences
   alias InfinityAPS.Configuration.Server
 
@@ -29,7 +33,7 @@ defmodule InfinityAPS.UI.PreferencesController do
   defp render_preferences(conn, preferences) do
     changeset =
       {preferences, @types}
-      |> Ecto.Changeset.cast(%{}, Map.keys(@types))
+      |> Changeset.cast(%{}, Map.keys(@types))
 
     render(conn, "index.html", changeset: changeset)
   end

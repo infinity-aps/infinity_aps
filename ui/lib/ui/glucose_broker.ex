@@ -1,9 +1,11 @@
 defmodule InfinityAPS.UI.GlucoseBroker do
+  @moduledoc false
   use GenServer
   require Logger
 
   alias InfinityAPS.Oref0.LoopStatus
   alias InfinityAPS.Oref0.Entries
+  alias InfinityAPS.UI.Endpoint
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: :glucose_broker)
@@ -22,13 +24,13 @@ defmodule InfinityAPS.UI.GlucoseBroker do
   end
 
   def handle_cast({:sgvs, sgvs}, state) do
-    Logger.warn(InfinityAPS.UI.Endpoint.broadcast("loop_status:glucose", "sgvs", %{data: sgvs}))
+    Logger.warn(Endpoint.broadcast("loop_status:glucose", "sgvs", %{data: sgvs}))
     {:noreply, state}
   end
 
   def handle_cast({:predicted_bgs, predicted_bgs}, state) do
     Logger.warn(
-      InfinityAPS.UI.Endpoint.broadcast("loop_status:glucose", "predicted_bgs", %{
+      Endpoint.broadcast("loop_status:glucose", "predicted_bgs", %{
         data: predicted_bgs
       })
     )

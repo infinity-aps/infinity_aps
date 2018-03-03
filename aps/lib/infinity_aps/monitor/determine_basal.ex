@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Monitor.DetermineBasal do
+  @moduledoc false
   require Logger
 
   def loop do
@@ -20,7 +21,7 @@ defmodule InfinityAPS.Monitor.DetermineBasal do
   end
 
   defp loop_dir do
-    Application.get_env(:aps, :loop_directory) |> Path.expand()
+    Path.expand(Application.get_env(:aps, :loop_directory))
   end
 
   defp write_basal(basal_results) do

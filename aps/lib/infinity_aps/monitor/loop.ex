@@ -1,8 +1,23 @@
 defmodule InfinityAPS.Monitor.Loop do
+  @moduledoc false
   use GenServer
   require Logger
 
   alias InfinityAPS.Configuration.Server
+
+  alias InfinityAPS.Monitor.{
+    GlucoseMonitor,
+    PumpHistoryMonitor,
+    CurrentBasalMonitor,
+    ProfileMonitor,
+    IOBMonitor,
+    DetermineBasal,
+    EnactTempBasal,
+    NightscoutTreatmentsReporter
+  }
+
+  alias InfinityAPS.Oref0.LoopStatus
+  alias Timex.Timezone
 
   def start_link(arg) do
     GenServer.start_link(__MODULE__, arg)
@@ -17,15 +32,15 @@ defmodule InfinityAPS.Monitor.Loop do
   def handle_info(:loop, state) do
     case set_system_time_from_pump(Timex.before?(Timex.now(), @way_back_when)) do
       {:ok} ->
-        InfinityAPS.Monitor.GlucoseMonitor.loop(local_timezone())
-        InfinityAPS.Monitor.PumpHistoryMonitor.loop(local_timezone())
-        InfinityAPS.Monitor.CurrentBasalMonitor.loop()
-        InfinityAPS.Monitor.ProfileMonitor.loop(local_timezone())
-        InfinityAPS.Monitor.IOBMonitor.loop(local_timezone())
-        InfinityAPS.Monitor.DetermineBasal.loop()
-        InfinityAPS.Oref0.LoopStatus.update_status_from_disk()
-        InfinityAPS.Monitor.EnactTempBasal.loop()
-        InfinityAPS.Monitor.NightscoutTreatmentsReporter.loop(local_timezone())
+        GlucoseMonitor.loop(local_timezone())
+        PumpHistoryMonitor.loop(local_timezone())
+        CurrentBasalMonitor.loop()
+        ProfileMonitor.loop(local_timezone())
+        IOBMonitor.loop(local_timezone())
+        DetermineBasal.loop()
+        LoopStatus.update_status_from_disk()
+        EnactTempBasal.loop()
+        NightscoutTreatmentsReporter.loop(local_timezone())
         schedule_work()
 
       {:error, error} ->
@@ -47,7 +62,7 @@ defmodule InfinityAPS.Monitor.Loop do
   defp set_system_time_from_pump(true) do
     with {:ok, pump_time} <- pump().read_time(),
          utc_zoned_time <-
-           Timex.to_datetime(pump_time, local_timezone()) |> Timex.Timezone.convert(:utc),
+           pump_time |> Timex.to_datetime(local_timezone()) |> Timezone.convert(:utc),
          {:ok, formatted_time} <- Timex.format(utc_zoned_time, "%Y-%m-%d %H:%M:%S", :strftime) do
       Logger.warn("Setting system time from pump to #{formatted_time} (UTC)")
       System.cmd("date", ["-s", formatted_time])
@@ -58,7 +73,7 @@ defmodule InfinityAPS.Monitor.Loop do
   end
 
   defp local_timezone do
-    Server.get_config(:timezone) |> Timex.Timezone.get()
+    :timezone |> Server.get_config() |> Timezone.get()
   end
 
   defp pump do

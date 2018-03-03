@@ -1,8 +1,11 @@
 defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
+  @moduledoc false
   require Logger
 
+  alias Pummpcomm.Monitor.HistoryMonitor
+
   def loop(local_timezone) do
-    history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(1440, local_timezone)
+    history_response = HistoryMonitor.get_pump_history(1440, local_timezone)
 
     with {:ok, history} <- history_response do
       write_history(history, local_timezone)
@@ -10,7 +13,7 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
   end
 
   def write_history(history, local_timezone) do
-    loop_dir = Application.get_env(:aps, :loop_directory) |> Path.expand()
+    loop_dir = Path.expand(Application.get_env(:aps, :loop_directory))
     File.mkdir_p!(loop_dir)
 
     encoded =
@@ -90,7 +93,8 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
   end
 
   defp formatted_time(timestamp, local_timezone) do
-    Timex.to_datetime(timestamp, local_timezone)
+    timestamp
+    |> Timex.to_datetime(local_timezone)
     |> Timex.format!("{ISO:Extended}")
   end
 end

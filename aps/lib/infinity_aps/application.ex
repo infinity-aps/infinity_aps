@@ -5,7 +5,11 @@ defmodule InfinityAPS.Application do
   require Logger
 
   alias InfinityAPS.Configuration.Server
+  alias InfinityAPS.Monitor.Loop
+  alias InfinityAPS.Oref0.{Entries, LoopStatus}
+  alias InfinityAPS.PummpcommSupervisor
   alias Pummpcomm.Radio.ChipSupervisor
+  alias TwilightInformant.Configuration
 
   @timeout 30_000
 
@@ -19,12 +23,12 @@ defmodule InfinityAPS.Application do
   defp children do
     [
       ChipSupervisor.child_spec([]),
-      InfinityAPS.PummpcommSupervisor.child_spec([]),
-      InfinityAPS.Monitor.Loop.child_spec([]),
-      InfinityAPS.Oref0.LoopStatus.child_spec(
+      PummpcommSupervisor.child_spec([]),
+      Loop.child_spec([]),
+      LoopStatus.child_spec(
         loop_directory: Application.get_env(:aps, :loop_directory)
       ),
-      InfinityAPS.Oref0.Entries.child_spec([])
+      Entries.child_spec([])
     ]
 
     # children ++ [ChipSupervisor.child_spec([])]
@@ -41,13 +45,16 @@ defmodule InfinityAPS.Application do
       recv_timeout: @timeout
     )
 
-    TwilightInformant.Configuration.start(nil, nil)
+    Configuration.start(nil, nil)
   end
 end
 
 defmodule InfinityAPS.PummpcommSupervisor do
+  @moduledoc false
   use Supervisor
+
   alias InfinityAPS.Configuration.Server
+  alias Timex.Timezone
 
   def start_link(arg) do
     result = {:ok, sup} = Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
@@ -74,6 +81,6 @@ defmodule InfinityAPS.PummpcommSupervisor do
   end
 
   defp local_timezone do
-    Server.get_config(:timezone) |> Timex.Timezone.get()
+    :timezone |> Server.get_config() |> Timezone.get()
   end
 end

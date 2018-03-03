@@ -1,4 +1,6 @@
 defmodule InfinityAPS.UI.LoopStatusChannel do
+  @moduledoc false
+
   use Phoenix.Channel
 
   require Logger

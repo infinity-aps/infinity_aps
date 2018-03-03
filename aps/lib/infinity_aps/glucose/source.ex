@@ -8,6 +8,7 @@ defimpl InfinityAPS.Glucose.Source, for: Pummpcomm.Monitor.BloodGlucoseMonitor d
 end
 
 defmodule InfinityAPS.TwilightInformant do
+  @moduledoc false
   defstruct [:ns_url, :api_secret, :httpoison_opts]
 end
 

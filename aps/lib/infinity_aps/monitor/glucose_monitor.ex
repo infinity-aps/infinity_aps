@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Monitor.GlucoseMonitor do
+  @moduledoc false
   require Logger
 
   alias InfinityAPS.Glucose.Source

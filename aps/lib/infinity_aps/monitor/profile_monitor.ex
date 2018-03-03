@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Monitor.ProfileMonitor do
+  @moduledoc false
   require Logger
   alias InfinityAPS.Configuration.Server
 
@@ -100,7 +101,7 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
   end
 
   defp write_profile(profile) do
-    loop_dir = Application.get_env(:aps, :loop_directory) |> Path.expand()
+    loop_dir = Path.expand(Application.get_env(:aps, :loop_directory))
     File.mkdir_p!(loop_dir)
 
     File.write!("#{loop_dir}/profile.json", Poison.encode!(profile), [:binary])

@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Monitor.CurrentBasalMonitor do
+  @moduledoc false
   require Logger
 
   def loop do
@@ -11,7 +12,7 @@ defmodule InfinityAPS.Monitor.CurrentBasalMonitor do
   end
 
   def write_oref0(temp_basal) do
-    loop_dir = Application.get_env(:aps, :loop_directory) |> Path.expand()
+    loop_dir = Path.expand(Application.get_env(:aps, :loop_directory))
     File.mkdir_p!(loop_dir)
 
     encoded =

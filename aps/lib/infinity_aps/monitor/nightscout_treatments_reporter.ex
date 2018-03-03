@@ -1,8 +1,11 @@
 defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
+  @moduledoc false
   require Logger
 
+  alias Pummpcomm.Monitor.HistoryMonitor
+
   def loop(local_timezone) do
-    history_response = Pummpcomm.Monitor.HistoryMonitor.get_pump_history(1440, local_timezone)
+    history_response = HistoryMonitor.get_pump_history(1440, local_timezone)
 
     with {:ok, entries} <- history_response do
       report_treatments(entries, local_timezone)
@@ -144,7 +147,8 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
   end
 
   defp formatted_time(timestamp, local_timezone) do
-    Timex.to_datetime(timestamp, local_timezone)
+    timestamp
+    |> Timex.to_datetime(local_timezone)
     |> Timex.format!("{ISO:Extended}")
   end
 end

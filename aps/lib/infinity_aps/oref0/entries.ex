@@ -1,8 +1,10 @@
 defmodule InfinityAPS.Oref0.Entries do
+  @moduledoc false
   use GenServer
   require Logger
 
   alias InfinityAPS.Configuration.Server
+  alias Timex.Timezone
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
@@ -23,7 +25,7 @@ defmodule InfinityAPS.Oref0.Entries do
     do: {:reply, {:error, "No sgvs cached"}, state}
 
   def handle_call({:write_entries, entries}, _sender, _state) do
-    loop_dir = Application.get_env(:aps, :loop_directory) |> Path.expand()
+    loop_dir = Path.expand(Application.get_env(:aps, :loop_directory))
     File.mkdir_p!(loop_dir)
 
     filtered_entries =
@@ -44,11 +46,11 @@ defmodule InfinityAPS.Oref0.Entries do
   defp map_sgv({:sensor_glucose_value, entry_data}, local_timezone) do
     date_with_zone = Timex.to_datetime(entry_data.timestamp, local_timezone)
     date = DateTime.to_unix(date_with_zone, :milliseconds)
-    dateString = Timex.format!(date_with_zone, "{ISO:Extended:Z}")
-    %{type: "sgv", sgv: entry_data.sgv, date: date, dateString: dateString}
+    date_string = Timex.format!(date_with_zone, "{ISO:Extended:Z}")
+    %{type: "sgv", sgv: entry_data.sgv, date: date, dateString: date_string}
   end
 
   defp local_timezone do
-    Server.get_config(:timezone) |> Timex.Timezone.get()
+    :timezone |> Server.get_config() |> Timezone.get()
   end
 end

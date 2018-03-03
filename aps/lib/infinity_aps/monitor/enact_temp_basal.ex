@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Monitor.EnactTempBasal do
+  @moduledoc false
   require Logger
 
   def loop do
@@ -11,11 +12,11 @@ defmodule InfinityAPS.Monitor.EnactTempBasal do
   end
 
   defp determine_basal do
-    File.read!("#{loop_dir()}/determine_basal.json") |> Poison.decode!()
+    "#{loop_dir()}/determine_basal.json" |> File.read!() |> Poison.decode!()
   end
 
   defp loop_dir do
-    Application.get_env(:aps, :loop_directory) |> Path.expand()
+    Path.expand(Application.get_env(:aps, :loop_directory))
   end
 
   defp enact_basal(basal_results) do

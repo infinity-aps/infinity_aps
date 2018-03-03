@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Report.NightscoutEntriesReporter do
+  @moduledoc false
   require Logger
 
   def report_sgvs(entries, local_timezone) do
@@ -27,7 +28,7 @@ defmodule InfinityAPS.Report.NightscoutEntriesReporter do
   defp map_sgv({:sensor_glucose_value, entry_data}, local_timezone) do
     date_with_zone = Timex.to_datetime(entry_data.timestamp, local_timezone)
     date = DateTime.to_unix(date_with_zone, :milliseconds)
-    dateString = Timex.format!(date_with_zone, "{ISO:Extended:Z}")
-    %{type: "sgv", sgv: entry_data.sgv, date: date, dateString: dateString}
+    date_string = Timex.format!(date_with_zone, "{ISO:Extended:Z}")
+    %{type: "sgv", sgv: entry_data.sgv, date: date, dateString: date_string}
   end
 end
