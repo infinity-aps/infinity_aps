@@ -3,8 +3,7 @@ defmodule InfinityAPS.Oref0.Entries do
   use GenServer
   require Logger
 
-  alias InfinityAPS.Configuration.Server
-  alias Timex.Timezone
+  alias InfinityAPS.Configuration
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
@@ -31,7 +30,7 @@ defmodule InfinityAPS.Oref0.Entries do
     filtered_entries =
       entries
       |> Enum.filter(&filter_sgv/1)
-      |> Enum.map(fn entry -> map_sgv(entry, local_timezone()) end)
+      |> Enum.map(fn entry -> map_sgv(entry, Configuration.local_timezone()) end)
 
     File.write!("#{loop_dir}/cgm.json", Poison.encode!(filtered_entries), [:binary])
 
@@ -48,9 +47,5 @@ defmodule InfinityAPS.Oref0.Entries do
     date = DateTime.to_unix(date_with_zone, :milliseconds)
     date_string = Timex.format!(date_with_zone, "{ISO:Extended:Z}")
     %{type: "sgv", sgv: entry_data.sgv, date: date, dateString: date_string}
-  end
-
-  defp local_timezone do
-    :timezone |> Server.get_config() |> Timezone.get()
   end
 end

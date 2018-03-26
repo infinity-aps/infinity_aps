@@ -7,7 +7,7 @@ defmodule InfinityAPS.Configuration.Application do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(InfinityAPS.Configuration.Server, [
+      worker(InfinityAPS.Configuration, [
         Keyword.get(Application.get_env(:cfg, InfinityAPS.Configuration), :file)
       ])
     ]

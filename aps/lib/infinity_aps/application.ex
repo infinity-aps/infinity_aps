@@ -4,12 +4,11 @@ defmodule InfinityAPS.Application do
   use Application
   require Logger
 
-  alias InfinityAPS.Configuration.Server
+  alias InfinityAPS.Configuration
   alias InfinityAPS.Monitor.Loop
   alias InfinityAPS.Oref0.{Entries, LoopStatus}
   alias InfinityAPS.PummpcommSupervisor
   alias Pummpcomm.Radio.ChipSupervisor
-  alias TwilightInformant.Configuration
 
   @timeout 30_000
 
@@ -33,8 +32,13 @@ defmodule InfinityAPS.Application do
   end
 
   defp start_twilight_informant do
-    Application.put_env(:twilight_informant, :ns_url, Server.get_config(:nightscout_url))
-    Application.put_env(:twilight_informant, :api_secret, Server.get_config(:nightscout_token))
+    Application.put_env(:twilight_informant, :ns_url, Configuration.get_config(:nightscout_url))
+
+    Application.put_env(
+      :twilight_informant,
+      :api_secret,
+      Configuration.get_config(:nightscout_token)
+    )
 
     Application.put_env(
       :twilight_informant,
@@ -43,7 +47,7 @@ defmodule InfinityAPS.Application do
       recv_timeout: @timeout
     )
 
-    Configuration.start(nil, nil)
+    TwilightInformant.Configuration.start(nil, nil)
   end
 end
 
@@ -51,8 +55,7 @@ defmodule InfinityAPS.PummpcommSupervisor do
   @moduledoc false
   use Supervisor
 
-  alias InfinityAPS.Configuration.Server
-  alias Timex.Timezone
+  alias InfinityAPS.Configuration
 
   def start_link(arg) do
     result = {:ok, sup} = Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
@@ -67,8 +70,8 @@ defmodule InfinityAPS.PummpcommSupervisor do
       Supervisor.start_child(
         sup,
         worker(Application.get_env(:pummpcomm, provider), [
-          Server.get_config(:pump_serial),
-          local_timezone()
+          Configuration.get_config(:pump_serial),
+          Configuration.local_timezone()
         ])
       )
     end)
@@ -76,9 +79,5 @@ defmodule InfinityAPS.PummpcommSupervisor do
 
   def init(_) do
     supervise([], strategy: :one_for_one)
-  end
-
-  defp local_timezone do
-    :timezone |> Server.get_config() |> Timezone.get()
   end
 end

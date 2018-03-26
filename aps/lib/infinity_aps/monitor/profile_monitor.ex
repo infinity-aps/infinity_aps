@@ -1,7 +1,7 @@
 defmodule InfinityAPS.Monitor.ProfileMonitor do
   @moduledoc false
   require Logger
-  alias InfinityAPS.Configuration.Server
+  alias InfinityAPS.Configuration
 
   def loop(local_timezone) do
     Logger.debug("Reading profile information")
@@ -14,7 +14,7 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
          {:ok, insulin_sensitivities} <- pump.read_insulin_sensitivities(),
          {:ok, basal_profile} <- pump.read_std_basal_profile(),
          {:ok, model_number} <- pump.get_model_number(),
-         %{preferences: preferences} <- Server.get_config() do
+         %{preferences: preferences} <- Configuration.get_config() do
       profile =
         format_profile(
           bg_targets: bg_targets,

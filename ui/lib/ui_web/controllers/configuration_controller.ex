@@ -5,7 +5,7 @@ defmodule InfinityAPS.UI.ConfigurationController do
 
   alias Ecto.Changeset
   alias InfinityAPS.Configuration.ConfigurationData
-  alias InfinityAPS.Configuration.Server
+  alias InfinityAPS.Configuration
 
   @types %{
     pump_serial: :string,
@@ -15,14 +15,14 @@ defmodule InfinityAPS.UI.ConfigurationController do
     nightscout_token: :string
   }
   def index(conn, _params) do
-    data = Server.get_config()
+    data = Configuration.get_config()
     render_config_data(conn, data)
   end
 
   def update(conn, params) do
     data = to_struct(ConfigurationData, params["configuration_data"])
-    Server.set_config(data)
-    Server.save_config()
+    Configuration.set_config(data)
+    Configuration.save_config()
     render_config_data(conn, data)
   end
 

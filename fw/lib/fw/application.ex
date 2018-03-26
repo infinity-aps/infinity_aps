@@ -5,7 +5,6 @@ defmodule Fw.Application do
 
   require Logger
 
-  alias InfinityAPS.Configuration.Server
   alias Phoenix.PubSub.PG2
   alias Nerves.Network
 

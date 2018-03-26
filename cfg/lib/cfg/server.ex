@@ -3,34 +3,10 @@ defmodule InfinityAPS.Configuration.Server do
   require Logger
   alias InfinityAPS.Configuration.ConfigurationData
 
-  def start_link(file) do
-    {:ok, _pid} = GenServer.start_link(__MODULE__, Path.expand(file), name: __MODULE__)
-  end
-
   def init(file) do
     :ok = File.mkdir_p(Path.dirname(file))
     :ok = File.touch(file)
     read_config(file)
-  end
-
-  def get_config() do
-    GenServer.call(__MODULE__, {:get_config})
-  end
-
-  def get_config(key) do
-    GenServer.call(__MODULE__, {:get_config, key})
-  end
-
-  def set_config(config = %ConfigurationData{}) do
-    GenServer.call(__MODULE__, {:set_config, config})
-  end
-
-  def set_config(key, value) do
-    GenServer.call(__MODULE__, {:set_config, key, value})
-  end
-
-  def save_config() do
-    GenServer.call(__MODULE__, {:save_config})
   end
 
   def handle_call({:get_config}, _from, state = {_file, config_map}) do
