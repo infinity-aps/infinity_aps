@@ -3,10 +3,6 @@ defmodule InfinityAPS.Configuration do
   alias InfinityAPS.Configuration.ConfigurationData
   alias Timex.Timezone
 
-  def start_link(file) do
-    {:ok, _pid} = GenServer.start_link(Server, Path.expand(file), name: Server)
-  end
-
   def get_config() do
     GenServer.call(Server, {:get_config})
   end

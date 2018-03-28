@@ -3,6 +3,10 @@ defmodule InfinityAPS.Configuration.Server do
   require Logger
   alias InfinityAPS.Configuration.ConfigurationData
 
+  def start_link(file) do
+    {:ok, _pid} = GenServer.start_link(__MODULE__, Path.expand(file), name: __MODULE__)
+  end
+
   def init(file) do
     :ok = File.mkdir_p(Path.dirname(file))
     :ok = File.touch(file)

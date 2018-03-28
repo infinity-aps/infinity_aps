@@ -4,7 +4,7 @@ config :logger, level: :info
 
 config :fw, host_mode: false
 
-config :cfg, InfinityAPS.Configuration, file: "/root/infinity_aps.json"
+config :aps, InfinityAPS.Configuration, file: "/root/infinity_aps.json"
 
 config :aps,
   loop_directory: "/root/loop",

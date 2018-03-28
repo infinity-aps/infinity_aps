@@ -13,14 +13,16 @@ defmodule InfinityAPS.Application do
   @timeout 30_000
 
   def start(_type, _args) do
-    start_twilight_informant()
 
     opts = [strategy: :one_for_one, name: InfinityAPS.Supervisor]
-    Supervisor.start_link(children(), opts)
+    result = Supervisor.start_link(children(), opts)
+    start_twilight_informant()
+    result
   end
 
   defp children do
     [
+      InfinityAPS.Configuration.Supervisor,
       ChipSupervisor.child_spec([]),
       PummpcommSupervisor.child_spec([]),
       Loop.child_spec([]),
