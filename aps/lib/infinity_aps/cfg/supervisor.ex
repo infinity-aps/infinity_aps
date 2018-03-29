@@ -9,9 +9,10 @@ defmodule InfinityAPS.Configuration.Supervisor do
 
   def init(_arg) do
     children = [
-      {InfinityAPS.Configuration.Server, [
-        Keyword.get(Application.get_env(:aps, InfinityAPS.Configuration), :file)
-      ]}
+      {InfinityAPS.Configuration.Server,
+       [
+         Keyword.get(Application.get_env(:aps, InfinityAPS.Configuration), :file)
+       ]}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

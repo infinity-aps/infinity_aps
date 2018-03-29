@@ -13,7 +13,6 @@ defmodule InfinityAPS.Application do
   @timeout 30_000
 
   def start(_type, _args) do
-
     opts = [strategy: :one_for_one, name: InfinityAPS.Supervisor]
     result = Supervisor.start_link(children(), opts)
     start_twilight_informant()

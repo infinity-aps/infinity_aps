@@ -2,7 +2,6 @@ use Mix.Config
 
 config :logger, :console, format: "[$level] $message\n"
 
-
 config :aps,
   loop_directory: Path.expand("../host_root/loop"),
   node_modules_directory: Path.expand("../host_root/node_modules")
