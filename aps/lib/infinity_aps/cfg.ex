@@ -1,9 +1,10 @@
 defmodule InfinityAPS.Configuration do
+  @moduledoc false
   alias InfinityAPS.Configuration.Server
   alias InfinityAPS.Configuration.ConfigurationData
   alias Timex.Timezone
 
-  def get_config() do
+  def get_config do
     GenServer.call(Server, {:get_config})
   end
 
@@ -19,7 +20,7 @@ defmodule InfinityAPS.Configuration do
     GenServer.call(Server, {:set_config, key, value})
   end
 
-  def save_config() do
+  def save_config do
     GenServer.call(Server, {:save_config})
   end
 

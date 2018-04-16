@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Configuration.ConfigurationData do
+  @moduledoc false
   alias InfinityAPS.Configuration.Preferences
 
   defstruct timezone: nil,

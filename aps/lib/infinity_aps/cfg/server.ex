@@ -1,4 +1,5 @@
 defmodule InfinityAPS.Configuration.Server do
+  @moduledoc false
   use GenServer
   require Logger
   alias InfinityAPS.Configuration.ConfigurationData

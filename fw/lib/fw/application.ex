@@ -7,6 +7,7 @@ defmodule Fw.Application do
 
   alias Phoenix.PubSub.PG2
   alias Nerves.Network
+  alias InfinityAPS.Configuration
 
   def start(_type, _args) do
     unless host_mode() do
@@ -30,8 +31,8 @@ defmodule Fw.Application do
   @key_mgmt :"WPA-PSK"
   defp init_network do
     Logger.info(fn -> "Initializing Network" end)
-    ssid = Server.get_config(:wifi_ssid)
-    psk = Server.get_config(:wifi_psk)
+    ssid = Configuration.get_config(:wifi_ssid)
+    psk = Configuration.get_config(:wifi_psk)
 
     case psk || "" do
       "" -> Network.setup("wlan0", ssid: ssid, key_mgmt: :NONE)
