@@ -3,6 +3,7 @@ defmodule InfinityAPS.Configuration.Server do
   use GenServer
   require Logger
   alias InfinityAPS.Configuration.ConfigurationData
+  alias Nerves.Runtime
 
   def start_link(file) do
     {:ok, _pid} = GenServer.start_link(__MODULE__, Path.expand(file), name: __MODULE__)
@@ -53,7 +54,7 @@ defmodule InfinityAPS.Configuration.Server do
          :ok <- File.write(file, config_data) do
       # Temporary way to apply configuration
       Logger.info("Configuration saved, rebooting")
-      Nerves.Runtime.reboot()
+      Runtime.reboot()
       :ok
     else
       error -> {:error, "Unable to write configuration data: #{error}"}
