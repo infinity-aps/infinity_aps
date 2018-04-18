@@ -61,7 +61,7 @@ defmodule InfinityAPS.Monitor.Loop do
   defp set_system_time_from_pump(false), do: {:ok}
 
   defp set_system_time_from_pump(true) do
-    with {:ok, pump_time} <- pump().read_time(),
+    with {:ok, pump_time} <- InfinityAPS.pump().read_time(),
          utc_zoned_time <-
            pump_time
            |> Timex.to_datetime(Configuration.local_timezone())
@@ -73,9 +73,5 @@ defmodule InfinityAPS.Monitor.Loop do
     else
       error -> {:error, error}
     end
-  end
-
-  defp pump do
-    Application.get_env(:pummpcomm, :pump)
   end
 end

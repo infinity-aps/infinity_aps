@@ -13,16 +13,11 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
   end
 
   def write_history(history, local_timezone) do
-    loop_dir = Path.expand(Application.get_env(:aps, :loop_directory))
-    File.mkdir_p!(loop_dir)
-
-    encoded =
-      history
-      |> Enum.filter(&filter_history/1)
-      |> Enum.map(fn entry -> map_history(entry, local_timezone) end)
-      |> Poison.encode!()
-
-    File.write!("#{loop_dir}/history.json", encoded, [:binary])
+    history
+    |> Enum.filter(&filter_history/1)
+    |> Enum.map(fn entry -> map_history(entry, local_timezone) end)
+    |> Poison.encode!()
+    |> InfinityAPS.write_data("history.json")
   end
 
   defp filter_history({entry, _})
@@ -37,7 +32,7 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
        ) do
     %{
       "_type" => "TempBasal",
-      "timestamp" => formatted_time(timestamp, local_timezone),
+      "timestamp" => InfinityAPS.formatted_time(timestamp, local_timezone),
       "rate" => rate,
       "temp" => Atom.to_string(rate_type)
     }
@@ -49,7 +44,7 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
        ) do
     %{
       "_type" => "TempBasalDuration",
-      "timestamp" => formatted_time(timestamp, local_timezone),
+      "timestamp" => InfinityAPS.formatted_time(timestamp, local_timezone),
       "duration (min)" => duration
     }
   end
@@ -67,7 +62,7 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
        ) do
     %{
       "_type" => "Bolus",
-      "timestamp" => formatted_time(timestamp, local_timezone),
+      "timestamp" => InfinityAPS.formatted_time(timestamp, local_timezone),
       "programmed" => programmed,
       "duration" => duration,
       "amount" => amount,
@@ -78,7 +73,7 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
   defp map_history({:bolus_wizard_estimate, data}, local_timezone) do
     %{
       "_type" => "BolusWizard",
-      "timestamp" => formatted_time(data.timestamp, local_timezone),
+      "timestamp" => InfinityAPS.formatted_time(data.timestamp, local_timezone),
       "bg" => data.bg,
       "bg_target_high" => data.bg_target_high,
       "bg_target_low" => data.bg_target_low,
@@ -90,11 +85,5 @@ defmodule InfinityAPS.Monitor.PumpHistoryMonitor do
       "sensitivity" => data.insulin_sensitivity,
       "unabsorbed_insulin_total" => data.unabsorbed_insulin_total
     }
-  end
-
-  defp formatted_time(timestamp, local_timezone) do
-    timestamp
-    |> Timex.to_datetime(local_timezone)
-    |> Timex.format!("{ISO:Extended}")
   end
 end

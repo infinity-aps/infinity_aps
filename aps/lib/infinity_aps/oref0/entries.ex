@@ -24,28 +24,17 @@ defmodule InfinityAPS.Oref0.Entries do
     do: {:reply, {:error, "No sgvs cached"}, state}
 
   def handle_call({:write_entries, entries}, _sender, _state) do
-    loop_dir = Path.expand(Application.get_env(:aps, :loop_directory))
-    File.mkdir_p!(loop_dir)
-
     filtered_entries =
       entries
-      |> Enum.filter(&filter_sgv/1)
-      |> Enum.map(fn entry -> map_sgv(entry, Configuration.local_timezone()) end)
+      |> Enum.filter(&InfinityAPS.filter_sgv/1)
+      |> Enum.map(fn entry -> InfinityAPS.map_sgv(entry, Configuration.local_timezone()) end)
 
-    File.write!("#{loop_dir}/cgm.json", Poison.encode!(filtered_entries), [:binary])
+    filtered_entries
+    |> Poison.encode!()
+    |> InfinityAPS.write_data("cgm.json")
 
     chronological_entries = Enum.reverse(filtered_entries)
     GenServer.cast(:glucose_broker, {:sgvs, chronological_entries})
     {:reply, {:ok, %{sgvs: chronological_entries}}, %{sgvs: chronological_entries}}
-  end
-
-  defp filter_sgv({:sensor_glucose_value, _}), do: true
-  defp filter_sgv(_), do: false
-
-  defp map_sgv({:sensor_glucose_value, entry_data}, local_timezone) do
-    date_with_zone = Timex.to_datetime(entry_data.timestamp, local_timezone)
-    date = DateTime.to_unix(date_with_zone, :milliseconds)
-    date_string = Timex.format!(date_with_zone, "{ISO:Extended:Z}")
-    %{type: "sgv", sgv: entry_data.sgv, date: date, dateString: date_string}
   end
 end
