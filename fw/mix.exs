@@ -44,7 +44,6 @@ defmodule Fw.Mixfile do
       {:nerves, "~> 1.0-rc", runtime: false},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.0"},
-      {:cfg, path: "../cfg"},
       {:aps, path: "../aps"},
       {:ui, path: "../ui"}
     ] ++ deps(@target)

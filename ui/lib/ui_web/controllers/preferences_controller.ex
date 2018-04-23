@@ -5,7 +5,7 @@ defmodule InfinityAPS.UI.PreferencesController do
 
   alias Ecto.Changeset
   alias InfinityAPS.Configuration.Preferences
-  alias InfinityAPS.Configuration.Server
+  alias InfinityAPS.Configuration
 
   @types %{
     max_iob: :string,
@@ -18,15 +18,15 @@ defmodule InfinityAPS.UI.PreferencesController do
     unsuspend_if_no_temp: :boolean
   }
   def index(conn, _params) do
-    preferences = Server.get_config().preferences
+    preferences = Configuration.get_config().preferences
     render_preferences(conn, preferences)
   end
 
   def update(conn, params) do
     preferences = to_struct(Preferences, params["preferences"])
-    updated_config = %{Server.get_config() | preferences: preferences}
-    Server.set_config(updated_config)
-    Server.save_config()
+    updated_config = %{Configuration.get_config() | preferences: preferences}
+    Configuration.set_config(updated_config)
+    Configuration.save_config()
     render_preferences(conn, preferences)
   end
 

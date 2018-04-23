@@ -1,7 +1,6 @@
 defmodule InfinityAPS.Glucose.Monitor do
   @moduledoc false
   require Logger
-  # alias InfinityAPS.Configuration.Server
   alias InfinityAPS.Glucose.Source
   # alias Pummpcomm.Monitor.BloodGlucoseMonitor
   alias InfinityAPS.TwilightInformant
