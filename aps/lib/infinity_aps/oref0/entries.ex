@@ -4,6 +4,7 @@ defmodule InfinityAPS.Oref0.Entries do
   require Logger
 
   alias InfinityAPS.Configuration
+  alias InfinityAPS.Glucose.Monitor
 
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
@@ -26,8 +27,8 @@ defmodule InfinityAPS.Oref0.Entries do
   def handle_call({:write_entries, entries}, _sender, _state) do
     filtered_entries =
       entries
-      |> Enum.filter(&InfinityAPS.filter_sgv/1)
-      |> Enum.map(fn entry -> InfinityAPS.map_sgv(entry, Configuration.local_timezone()) end)
+      |> Enum.filter(&Monitor.filter_sgv/1)
+      |> Enum.map(fn entry -> Monitor.map_sgv(entry, Configuration.local_timezone()) end)
 
     filtered_entries
     |> Poison.encode!()
