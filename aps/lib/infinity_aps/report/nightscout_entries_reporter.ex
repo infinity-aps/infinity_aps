@@ -2,13 +2,15 @@ defmodule InfinityAPS.Report.NightscoutEntriesReporter do
   @moduledoc false
   require Logger
 
+  alias InfinityAPS.Glucose.Monitor
+
   def report_sgvs(entries, local_timezone) do
     Logger.debug("Posting entries")
 
     response =
       entries
-      |> Enum.filter(&filter_sgv/1)
-      |> Enum.map(fn entry -> map_sgv(entry, local_timezone) end)
+      |> Enum.filter(&Monitor.filter_sgv/1)
+      |> Enum.map(fn entry -> Monitor.map_sgv(entry, local_timezone) end)
       |> TwilightInformant.post_entries()
 
     case response do
@@ -20,15 +22,5 @@ defmodule InfinityAPS.Report.NightscoutEntriesReporter do
     end
 
     response
-  end
-
-  defp filter_sgv({:sensor_glucose_value, _}), do: true
-  defp filter_sgv(_), do: false
-
-  defp map_sgv({:sensor_glucose_value, entry_data}, local_timezone) do
-    date_with_zone = Timex.to_datetime(entry_data.timestamp, local_timezone)
-    date = DateTime.to_unix(date_with_zone, :milliseconds)
-    date_string = Timex.format!(date_with_zone, "{ISO:Extended:Z}")
-    %{type: "sgv", sgv: entry_data.sgv, date: date, dateString: date_string}
   end
 end

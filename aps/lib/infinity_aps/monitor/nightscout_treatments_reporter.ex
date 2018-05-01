@@ -57,7 +57,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
   defp map_history({:cal_bg_for_ph, %{amount: amount, timestamp: timestamp}}, local_timezone) do
     %{
       eventType: "BG Check",
-      created_at: formatted_time(timestamp, local_timezone),
+      created_at: InfinityAPS.formatted_time(timestamp, local_timezone),
       glucose: amount,
       glucoseType: "Finger"
     }
@@ -69,7 +69,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
        ) do
     %{
       eventType: "Note",
-      created_at: formatted_time(timestamp, local_timezone),
+      created_at: InfinityAPS.formatted_time(timestamp, local_timezone),
       notes: alarm_type,
       glucose: amount,
       glucoseType: "Sensor"
@@ -80,7 +80,11 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
          {:alarm_sensor, %{alarm_type: alarm_type, timestamp: timestamp}},
          local_timezone
        ) do
-    %{eventType: "Note", created_at: formatted_time(timestamp, local_timezone), notes: alarm_type}
+    %{
+      eventType: "Note",
+      created_at: InfinityAPS.formatted_time(timestamp, local_timezone),
+      notes: alarm_type
+    }
   end
 
   # bolus wizard with bolus
@@ -94,7 +98,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
        ) do
     %{
       eventType: "Meal Bolus",
-      created_at: formatted_time(timestamp, local_timezone),
+      created_at: InfinityAPS.formatted_time(timestamp, local_timezone),
       carbs: carbohydrates,
       insulin: amount,
       glucose: bg,
@@ -109,7 +113,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
        ) do
     %{
       eventType: "Correction Bolus",
-      created_at: formatted_time(timestamp, local_timezone),
+      created_at: InfinityAPS.formatted_time(timestamp, local_timezone),
       insulin: amount
     }
   end
@@ -121,7 +125,7 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
        ) do
     %{
       eventType: "Carb Correction",
-      created_at: formatted_time(timestamp, local_timezone),
+      created_at: InfinityAPS.formatted_time(timestamp, local_timezone),
       carbs: carbohydrates,
       insulin: 0,
       glucose: bg,
@@ -138,17 +142,11 @@ defmodule InfinityAPS.Monitor.NightscoutTreatmentsReporter do
 
     %{
       eventType: "Temp Basal",
-      created_at: formatted_time(timestamp, local_timezone),
+      created_at: InfinityAPS.formatted_time(timestamp, local_timezone),
       rate: rate,
       absolute: rate,
       temp: Atom.to_string(rate_type),
       duration: duration
     }
-  end
-
-  defp formatted_time(timestamp, local_timezone) do
-    timestamp
-    |> Timex.to_datetime(local_timezone)
-    |> Timex.format!("{ISO:Extended}")
   end
 end

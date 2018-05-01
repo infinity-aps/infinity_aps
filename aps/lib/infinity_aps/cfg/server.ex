@@ -5,7 +5,7 @@ defmodule InfinityAPS.Configuration.Server do
   alias InfinityAPS.Configuration.ConfigurationData
 
   def start_link(file) do
-    {:ok, _pid} = GenServer.start_link(__MODULE__, Path.expand(file), name: __MODULE__)
+    {:ok, _pid} = GenServer.start_link(__MODULE__, file, name: __MODULE__)
   end
 
   def init(file) do

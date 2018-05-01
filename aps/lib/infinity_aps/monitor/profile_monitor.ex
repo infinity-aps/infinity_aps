@@ -6,7 +6,7 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
   def loop(local_timezone) do
     Logger.debug("Reading profile information")
 
-    pump = pump()
+    pump = InfinityAPS.pump()
 
     with {:ok, bg_targets} <- pump.read_bg_targets(),
          {:ok, settings} <- pump.read_settings(),
@@ -28,15 +28,11 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
         )
 
       Logger.info(fn -> inspect(profile) end)
-      write_profile(profile)
+      InfinityAPS.write_data(Poison.encode!(profile), "profile.json")
     else
       error ->
         Logger.error(fn -> "Error while reading profile information: #{inspect(error)}" end)
     end
-  end
-
-  defp pump do
-    Application.get_env(:pummpcomm, :pump)
   end
 
   defp format_profile(
@@ -98,12 +94,5 @@ defmodule InfinityAPS.Monitor.ProfileMonitor do
         rate: item.rate
       }
     end)
-  end
-
-  defp write_profile(profile) do
-    loop_dir = Path.expand(Application.get_env(:aps, :loop_directory))
-    File.mkdir_p!(loop_dir)
-
-    File.write!("#{loop_dir}/profile.json", Poison.encode!(profile), [:binary])
   end
 end

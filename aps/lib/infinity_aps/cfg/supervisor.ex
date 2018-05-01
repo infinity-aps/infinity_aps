@@ -11,7 +11,7 @@ defmodule InfinityAPS.Configuration.Supervisor do
     children = [
       {InfinityAPS.Configuration.Server,
        [
-         Keyword.get(Application.get_env(:aps, InfinityAPS.Configuration), :file)
+         InfinityAPS.configuration_file()
        ]}
     ]
 
