@@ -6,3 +6,7 @@
 use Mix.Config
 
 import_config "#{Mix.Project.config()[:target]}.exs"
+
+config :logger, backends: [RingLogger]
+
+config :logger, RingLogger, max_size: 100
