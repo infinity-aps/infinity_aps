@@ -5,13 +5,15 @@ defmodule InfinityAPS.UI do
 
   alias InfinityAPS.UI.GlucoseBroker
   alias InfinityAPS.UI.Endpoint
+  alias InfinityAPS.UI.Client
 
   def start(_type, _args) do
     import Supervisor.Spec
 
     children = [
       supervisor(Endpoint, []),
-      GlucoseBroker.child_spec(nil)
+      GlucoseBroker.child_spec(nil),
+      Client
     ]
 
     opts = [strategy: :one_for_one, name: InfinityAPS.UI.Supervisor]

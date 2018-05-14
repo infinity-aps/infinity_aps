@@ -1,4 +1,4 @@
-defmodule RingLogger.Client do
+defmodule InfinityAPS.UI.Client do
   use GenServer
 
   @moduledoc """
@@ -22,14 +22,14 @@ defmodule RingLogger.Client do
   need to create one of these. See `configure/2` for information on options.
   """
   def start_link(config \\ []) do
-    GenServer.start_link(__MODULE__, config)
+    GenServer.start_link(__MODULE__, config, name: __MODULE__)
   end
 
   @doc """
   Stop a client.
   """
-  def stop(client_pid) do
-    GenServer.stop(client_pid)
+  def stop() do
+    GenServer.stop(__MODULE__)
   end
 
   @doc """
@@ -43,58 +43,58 @@ defmodule RingLogger.Client do
     https://hexdocs.pm/logger/master/Logger.html#module-custom-formatting)
   * `:level` - The minimum log level to report.
   """
-  @spec configure(GenServer.server(), [RingLogger.client_option()]) :: :ok
-  def configure(client_pid, config) do
-    GenServer.call(client_pid, {:config, config})
+  @spec configure([RingLogger.client_option()]) :: :ok
+  def configure(config) do
+    GenServer.call(__MODULE__, {:config, config})
   end
 
   @doc """
   Attach the current IEx session to the logger. It will start printing log messages.
   """
-  @spec attach(GenServer.server()) :: :ok
-  def attach(client_pid) do
-    GenServer.call(client_pid, :attach)
+  @spec attach() :: :ok
+  def attach() do
+    GenServer.call(__MODULE__, :attach)
   end
 
   @doc """
   Detach the current IEx session from the logger.
   """
-  @spec detach(GenServer.server()) :: :ok
-  def detach(client_pid) do
-    GenServer.call(client_pid, :detach)
+  @spec detach() :: :ok
+  def detach() do
+    GenServer.call(__MODULE__, :detach)
   end
 
   @doc """
   Tail the messages in the log.
   """
-  @spec tail(GenServer.server()) :: :ok
-  def tail(client_pid) do
-    GenServer.call(client_pid, :tail)
+  @spec tail() :: :ok
+  def tail() do
+    GenServer.call(__MODULE__, :tail)
   end
 
   @doc """
   Reset the index into the log for `tail/1` to the oldest entry.
   """
-  @spec reset(GenServer.server()) :: :ok
-  def reset(client_pid) do
-    GenServer.call(client_pid, :reset)
+  @spec reset() :: :ok
+  def reset() do
+    GenServer.call(__MODULE__, :reset)
   end
 
   @doc """
   Helper method for formatting log messages per the current client's
   configuration.
   """
-  @spec format(GenServer.server(), RingLogger.entry()) :: :ok
-  def format(client_pid, message) do
-    GenServer.call(client_pid, {:format, message})
+  @spec format(RingLogger.entry()) :: :ok
+  def format(message) do
+    GenServer.call(__MODULE__, {:format, message})
   end
 
   @doc """
   Run a regular expression on each entry in the log and print out the matchers.
   """
-  @spec grep(GenServer.server(), Regex.t()) :: :ok
-  def grep(client_pid, regex) do
-    GenServer.call(client_pid, {:grep, regex})
+  @spec grep(Regex.t()) :: :ok
+  def grep(regex) do
+    GenServer.call(__MODULE__, {:grep, regex})
   end
 
   def init(config) do
