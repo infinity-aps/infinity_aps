@@ -45,6 +45,7 @@ defmodule Fw.Mixfile do
       {:poison, "~> 3.1"},
       {:timex, "~> 3.0"},
       {:aps, path: "../aps"},
+      {:ring_logger, "~> 0.4"},
       {:ui, path: "../ui"}
     ] ++ deps(@target)
   end
