@@ -2,6 +2,7 @@ defmodule InfinityAPS.UI.Client do
   use GenServer
 
   alias InfinityAPS.UI.Endpoint
+  alias Logger.Formatter
 
   @moduledoc """
   Interact with the RingLogger
@@ -30,7 +31,7 @@ defmodule InfinityAPS.UI.Client do
   @doc """
   Stop a client.
   """
-  def stop() do
+  def stop do
     GenServer.stop(__MODULE__)
   end
 
@@ -54,7 +55,7 @@ defmodule InfinityAPS.UI.Client do
   Attach the current IEx session to the logger. It will start printing log messages.
   """
   @spec attach() :: :ok
-  def attach() do
+  def attach do
     GenServer.call(__MODULE__, :attach)
   end
 
@@ -62,7 +63,7 @@ defmodule InfinityAPS.UI.Client do
   Detach the current IEx session from the logger.
   """
   @spec detach() :: :ok
-  def detach() do
+  def detach do
     GenServer.call(__MODULE__, :detach)
   end
 
@@ -70,7 +71,7 @@ defmodule InfinityAPS.UI.Client do
   Tail the messages in the log.
   """
   @spec tail() :: :ok
-  def tail() do
+  def tail do
     GenServer.call(__MODULE__, :tail)
   end
 
@@ -78,7 +79,7 @@ defmodule InfinityAPS.UI.Client do
   Reset the index into the log for `tail/1` to the oldest entry.
   """
   @spec reset() :: :ok
-  def reset() do
+  def reset do
     GenServer.call(__MODULE__, :reset)
   end
 
@@ -103,8 +104,8 @@ defmodule InfinityAPS.UI.Client do
     state = %State{
       io: Keyword.get(config, :io, :stdio),
       colors: configure_colors(config),
-      metadata: Keyword.get(config, :metadata, []) |> configure_metadata(),
-      format: Keyword.get(config, :format) |> configure_formatter(),
+      metadata: config |> Keyword.get(:metadata, []) |> configure_metadata(),
+      format: config |> Keyword.get(:format) |> configure_formatter(),
       level: Keyword.get(config, :level, :debug)
     }
 
@@ -196,7 +197,7 @@ defmodule InfinityAPS.UI.Client do
   end
 
   defp apply_format(format, level, msg, ts, metadata) do
-    Logger.Formatter.format(format, level, msg, ts, metadata)
+    Formatter.format(format, level, msg, ts, metadata)
   end
 
   defp configure_metadata(:all), do: :all
@@ -241,7 +242,7 @@ defmodule InfinityAPS.UI.Client do
   defp configure_formatter({mod, fun}), do: {mod, fun}
 
   defp configure_formatter(format) do
-    Logger.Formatter.compile(format)
+    Formatter.compile(format)
   end
 
   defp maybe_print({level, _} = msg, state) do

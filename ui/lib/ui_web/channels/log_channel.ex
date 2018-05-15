@@ -3,8 +3,10 @@ defmodule InfinityAPS.UI.LogChannel do
 
   use Phoenix.Channel
 
+  alias InfinityAPS.UI.Client
+
   def join("logs", _message, socket) do
-    InfinityAPS.UI.Client.attach
+    Client.attach()
     {:ok, socket}
   end
 end
