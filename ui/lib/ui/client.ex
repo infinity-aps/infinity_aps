@@ -1,6 +1,8 @@
 defmodule InfinityAPS.UI.Client do
   use GenServer
 
+  alias InfinityAPS.UI.Endpoint
+
   @moduledoc """
   Interact with the RingLogger
   """
@@ -110,7 +112,7 @@ defmodule InfinityAPS.UI.Client do
   end
 
   def handle_info({:log, msg}, state) do
-    maybe_print(msg, state)
+    maybe_send(msg, state)
     {:noreply, state}
   end
 
@@ -140,7 +142,7 @@ defmodule InfinityAPS.UI.Client do
         {:reply, :ok, state}
 
       last_message ->
-        Enum.each(messages, fn msg -> maybe_print(msg, state) end)
+        Enum.each(messages, fn msg -> maybe_send(msg, state) end)
         next_index = message_index(last_message) + 1
         {:reply, :ok, %{state | index: next_index}}
     end
@@ -152,7 +154,7 @@ defmodule InfinityAPS.UI.Client do
 
   def handle_call({:grep, regex}, _from, state) do
     Server.get()
-    |> Enum.each(fn msg -> maybe_print(msg, regex, state) end)
+    |> Enum.each(fn msg -> maybe_send(msg, regex, state) end)
 
     {:reply, :ok, state}
   end
@@ -167,9 +169,24 @@ defmodule InfinityAPS.UI.Client do
   defp format_message({level, {_, msg, ts, md}}, state) do
     metadata = take_metadata(md, state.metadata)
 
+    """
+    Note: A log can be converted to a map with a single string (as done here)
+          or they can be a map with multiple fields (commented out).
+
+    {d, t} = ts
+    date = Logger.Formatter.format_date(d)
+           |> IO.chardata_to_string
+    time = Logger.Formatter.format_time(t)
+           |> IO.chardata_to_string
     state.format
     |> apply_format(level, msg, ts, metadata)
-    |> color_event(level, state.colors, md)
+    %{level: level |> Atom.to_string, msg: msg |> IO.chardata_to_string, date: date, time: time, metadata: metadata}
+    """
+
+    state.format
+    |> apply_format(level, msg, ts, metadata)
+    |> IO.chardata_to_string()
+    |> String.trim()
   end
 
   ## Helpers
@@ -240,6 +257,22 @@ defmodule InfinityAPS.UI.Client do
     if meet_level?(level, state.level) && Regex.match?(r, flattened_text) do
       item = format_message(msg, state)
       IO.binwrite(state.io, item)
+    end
+  end
+
+  defp maybe_send({level, _} = msg, state) do
+    if meet_level?(level, state.level) do
+      item = format_message(msg, state)
+      Endpoint.broadcast!("logs", "log:new", %{msg: item})
+    end
+  end
+
+  defp maybe_send({level, {_, text, _, _}} = msg, r, state) do
+    flattened_text = IO.iodata_to_binary(text)
+
+    if meet_level?(level, state.level) && Regex.match?(r, flattened_text) do
+      item = format_message(msg, state)
+      Endpoint.broadcast!("logs", "log:new", %{msg: item})
     end
   end
 end
